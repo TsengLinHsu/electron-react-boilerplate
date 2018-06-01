@@ -1,14 +1,118 @@
-.container {
-  position: absolute;
-  top: 30%;
-  left: 10px;
+.materialicons {
+  font-family: "Material Icons";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px; /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: "liga";
+}
+
+header,
+footer {
+  background-color: #ffa500;
   text-align: center;
+  min-width: 500px;
 }
 
-.container h2 {
-  font-size: 5rem;
+.container {
+  font-family: "Roboto", sans-serif;
 }
 
-.container a {
-  font-size: 1.4rem;
+.content {
+  margin: auto;
+  width: 50%;
+}
+
+main {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto;
+  grid-gap: 20px;
+  margin-top: 44px;
+  grid-auto-rows: auto;
+  justify-items: center;
+  justify-content: center;
+  align-items: stretch;
+  align-content: center;
+  grid-auto-flow: row;
+}
+
+h1 {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-align: center;
+  color: white;
+  padding: 10px;
+}
+
+h2 {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-align: left;
+  color: #ffa500;
+  padding: 10px 0px 10px 10px;
+}
+
+img {
+  width: 100%;
+  height: auto;
+}
+
+.DeviceCard {
+  width: 300px;
+  /* height: auto; */
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.5);
+  background-color: aliceblue;
+}
+
+.DeviceIcon {
+  padding-left: 10px;
+}
+
+.DeviceType {
+  display: inline-block;
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  text-align: left;
+  color: #4a4a4a;
+  position: relative;
+  margin-bottom: 0;
+}
+
+.Description {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.29;
+  letter-spacing: 0.1px;
+  text-align: left;
+  color: #4a4a4a;
+  padding: 10px 0px 10px 10px;
+  border-top: 1px solid #4a4a4a;
+}
+
+.Select {
+  width: 620px;
+  margin: auto;
+}
+
+footer {
+  margin-top: 44px;
 }

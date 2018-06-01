@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 // import { Link } from 'react-router-dom';
 import UsbDetect from 'usb-detection';
 import Select from 'react-select';
-import 'react-select/dist/react-select.css';
 import styles from './Home.css';
 
 type Props = {};
@@ -24,8 +23,19 @@ type Props = {};
 function Devices(props) {
   if (props.devices) {
     const elements = props.devices.map(device => (
-      <div className="deviceCard" key={device.locationId}>
-        {device.deviceName}
+      <div className={styles.DeviceCard} key={device.deviceAddress}>
+        <h2>{device.deviceName}</h2>
+        <i className={`${styles.materialicons} ${styles.DeviceIcon}`}>usb</i>
+        <p className={styles.DeviceType}>USB Device</p>
+        <div className={styles.Description}>
+          <p>deviceAddress: {device.deviceAddress}</p>
+          <p>deviceName: {device.deviceName}</p>
+          <p>locationId: {device.locationId}</p>
+          <p>manufacturer: {device.manufacturer}</p>
+          <p>productId: {device.productId}</p>
+          <p>serialNumber: {device.serialNumber}</p>
+          <p>vendorId: {device.vendorId}</p>
+        </div>
       </div>
     ));
     return elements;
@@ -37,19 +47,24 @@ export default class Home extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
-      devices: null,
+      devices: [],
+      selectDevices: [{ value: '', label: '' }],
       selectedOption: ''
     };
   }
 
   componentDidMount() {
     UsbDetect.startMonitoring();
-    this.updateDevices(UsbDetect);
+    UsbDetect.find((err, findedDevices) =>
+      this.setState({
+        devices: findedDevices,
 
-    UsbDetect.on('change', device => {
-      console.log('change', device);
-      this.updateDevices(UsbDetect);
-    });
+        selectDevices: findedDevices.map(device => ({
+          value: device.deviceAddress,
+          label: `${device.deviceName} (${device.deviceAddress})`
+        }))
+      })
+    );
   }
 
   componentWillUnmount() {}
@@ -62,36 +77,28 @@ export default class Home extends Component<Props> {
     }
   };
 
-  updateDevices(usbDetect) {
-    usbDetect.find((err, devices) => {
-      // console.log('find', devices, err);
-      this.setState({
-        devices
-      });
-      return true;
-    });
-  }
-
   render() {
     const { selectedOption } = this.state;
 
     return (
-      <div>
-        <div className={styles.container} data-tid="container">
-          <Select
-            name="form-field-name"
-            value={selectedOption}
-            onChange={this.handleChange}
-            options={[
-              { value: 'one', label: 'One' },
-              { value: 'two', label: 'Two' }
-            ]}
-          />
-          <main>
-            {/* <DevicesList devices={this.state.devices} /> */}
-            <Devices devices={this.state.devices} />
-          </main>
-        </div>
+      <div className={styles.container} data-tid="container">
+        <header>
+          <h1>Main Page</h1>
+        </header>
+        <Select
+          className={styles.Select}
+          name="form-field-name"
+          value={selectedOption}
+          onChange={this.handleChange}
+          options={this.state.selectDevices}
+        />
+        <main>
+          {/* <DevicesList devices={this.state.devices} /> */}
+          <Devices devices={this.state.devices} />
+        </main>
+        <footer>
+          <h1>footer</h1>
+        </footer>
       </div>
     );
   }
