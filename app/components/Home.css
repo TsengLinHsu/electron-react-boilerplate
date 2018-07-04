@@ -34,23 +34,11 @@ footer {
   font-family: "Roboto", sans-serif;
 }
 
-.content {
-  margin: auto;
-  width: 50%;
-}
-
 main {
-  display: grid;
-  grid-template-columns: auto auto;
-  grid-template-rows: auto;
-  grid-gap: 20px;
-  margin-top: 44px;
-  grid-auto-rows: auto;
-  justify-items: center;
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  align-items: stretch;
-  align-content: center;
-  grid-auto-flow: row;
+  margin: 44px;
 }
 
 h1 {
@@ -80,6 +68,7 @@ img {
   /* height: auto; */
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.5);
   background-color: aliceblue;
+  margin: 20px;
 }
 
 .DeviceIcon {
