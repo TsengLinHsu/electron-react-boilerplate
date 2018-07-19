@@ -12,8 +12,13 @@ export default class Home extends Component<Props> {
     return (
       <div>
         <div className={styles.container} data-tid="container">
-          <h2>Home</h2>
-          <Link to="/counter">to Counter</Link>
+          <h2>Select Interface</h2>
+          <Link to="/usb">
+            <i className="fa fa-usb fa-3x" />
+          </Link>
+          <Link to="/network">
+            <i className="fa fa-wifi fa-3x" />
+          </Link>
         </div>
       </div>
     );
