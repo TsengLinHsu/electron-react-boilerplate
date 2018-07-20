@@ -19,6 +19,9 @@ export default class Home extends Component<Props> {
           <Link to="/network">
             <i className="fa fa-wifi fa-3x" />
           </Link>
+          <Link to="/counter">
+            <i className="fa fa-calculator fa-3x" />
+          </Link>
         </div>
       </div>
     );

@@ -1,13 +1,16 @@
-// @flow
-import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import Network from '../components/Network';
+import * as PrinterActions from '../actions/printer';
 
-type Props = {};
-
-export default class NetworkPage extends Component<Props> {
-  props: Props;
-
-  render() {
-    return <Network />;
-  }
+function mapStateToProps(state) {
+  return {
+    printers: state.printers
+  };
 }
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(PrinterActions, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Network);
