@@ -1,15 +1,6 @@
 // @flow
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  // Card,
-  // CardBody,
-  // CardTitle,
-  // CardSubtitle,
-  // CardImg,
-  // CardText,
-  Button
-} from 'reactstrap';
 import styles from './Detail.css';
 
 type Props = {
@@ -46,18 +37,24 @@ export default class Detail extends Component<Props> {
       <div>
         <div className="sticky-top">
           <Link to="/network">
-            <Button>
+            <button className="btn btn-primary m-2">
               <i className="fa fa-arrow-left" />
-            </Button>
+            </button>
           </Link>
-          <Button onClick={() => updatePrinterDetails(match.params.ip)}>
+          <button
+            className="btn btn-primary m-2"
+            onClick={() => updatePrinterDetails(match.params.ip)}
+          >
             <i className="fa fa-refresh" />
-          </Button>
-          <Button onClick={removePrinterDetails}>
+          </button>
+          <button
+            className="btn btn-primary m-2"
+            onClick={removePrinterDetails}
+          >
             <i className="fa fa-minus" />
-          </Button>
+          </button>
         </div>
-        <div className="flex mx-auto">
+        <div className="flex m-2">
           <h1>{match.params.ip}</h1>
           <div className={styles.printerCard} />
           {details.map(detail => (

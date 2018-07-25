@@ -7,8 +7,7 @@ import {
   CardTitle,
   CardSubtitle,
   CardImg,
-  CardText,
-  Button
+  CardText
 } from 'reactstrap';
 import styles from './Network.css';
 import cm315z from '../../resources/imgs/cm315z.jpg';
@@ -16,7 +15,7 @@ import cm315z from '../../resources/imgs/cm315z.jpg';
 type Props = {
   startBonjour: () => void,
   removeAllPrinter: () => void,
-  togglePrinterDetails: IPv4 => void,
+  togglePrinterDetails: (IPv4: string) => void,
   printers: Array
 };
 
@@ -38,16 +37,16 @@ export default class Network extends Component<Props> {
       <div>
         <div className="sticky-top">
           <Link to="/">
-            <Button>
+            <button className="btn btn-primary m-2">
               <i className="fa fa-arrow-left" />
-            </Button>
+            </button>
           </Link>
-          <Button onClick={startBonjour}>
+          <button className="btn btn-primary m-2" onClick={startBonjour}>
             <i className="fa fa-refresh" />
-          </Button>
-          <Button onClick={removeAllPrinter}>
+          </button>
+          <button className="btn btn-primary m-2" onClick={removeAllPrinter}>
             <i className="fa fa-minus" />
-          </Button>
+          </button>
         </div>
         <div className="d-flex flex-wrap">
           {printers.map(printer => (
@@ -69,13 +68,14 @@ export default class Network extends Component<Props> {
                     }}
                   > */}
                   <Link to={`/detail/${printer.referer.address}`}>
-                    <Button
+                    <button
+                      className="btn btn-primary"
                       onClick={() =>
                         togglePrinterDetails(printer.referer.address)
                       }
                     >
                       Details
-                    </Button>
+                    </button>
                   </Link>
                 </CardBody>
               </Card>
