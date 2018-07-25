@@ -1,46 +1,84 @@
 // @flow
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Bonjour from 'bonjour';
+import {
+  Card,
+  CardBody,
+  CardTitle,
+  CardSubtitle,
+  CardImg,
+  CardText,
+  Button
+} from 'reactstrap';
 import styles from './Network.css';
+import cm315z from '../../resources/imgs/cm315z.jpg';
 
 type Props = {
   startBonjour: () => void,
   removeAllPrinter: () => void,
-  printers: Bonjour.Service
+  togglePrinterDetails: IPv4 => void,
+  printers: Array
 };
 
 export default class Network extends Component<Props> {
   props: Props;
 
+  // componentDidMount() {
+  //   this.props.startBonjour();
+  // }
+
   render() {
-    const { startBonjour, removeAllPrinter, printers } = this.props;
+    const {
+      startBonjour,
+      removeAllPrinter,
+      togglePrinterDetails,
+      printers
+    } = this.props;
     return (
       <div>
-        <div className={styles.backButton} data-tid="backButton">
+        <div className="sticky-top">
           <Link to="/">
-            <i className="fa fa-arrow-left fa-3x" />
+            <Button>
+              <i className="fa fa-arrow-left" />
+            </Button>
           </Link>
-        </div>
-        <div className={styles.btnGroup}>
-          <button
-            className={styles.btn}
-            onClick={startBonjour}
-            data-tclass="btn"
-          >
+          <Button onClick={startBonjour}>
             <i className="fa fa-refresh" />
-          </button>
-          <button
-            className={styles.btn}
-            onClick={removeAllPrinter}
-            data-tclass="btn"
-          >
+          </Button>
+          <Button onClick={removeAllPrinter}>
             <i className="fa fa-minus" />
-          </button>
+          </Button>
+        </div>
+        <div className="d-flex flex-wrap">
           {printers.map(printer => (
-            <div className={`printer ${styles.printer}`} data-tid="printer">
-              {printer.name}
-              <ul>{printer.addresses.map(address => <li>{address}</li>)}</ul>
+            <div className={styles.printerCard} key={printer.name}>
+              <Card>
+                <CardImg
+                  className={styles.printerCardImg}
+                  src={cm315z}
+                  alt="Card image cap"
+                />
+                <CardBody>
+                  <CardTitle>{printer.name}</CardTitle>
+                  <CardSubtitle>Addresses</CardSubtitle>
+                  <CardText>{printer.referer.address}</CardText>
+                  {/* <Link
+                    to={{
+                      pathname: '/detail',
+                      state: { ip: printer.referer.address }
+                    }}
+                  > */}
+                  <Link to={`/detail/${printer.referer.address}`}>
+                    <Button
+                      onClick={() =>
+                        togglePrinterDetails(printer.referer.address)
+                      }
+                    >
+                      Details
+                    </Button>
+                  </Link>
+                </CardBody>
+              </Card>
             </div>
           ))}
         </div>

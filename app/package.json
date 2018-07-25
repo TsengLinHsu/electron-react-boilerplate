@@ -15,6 +15,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "bonjour": "^3.5.0"
+    "bonjour": "^3.5.0",
+    "net-snmp": "^1.2.4"
   }
 }

@@ -6,6 +6,7 @@ import HomePage from './containers/HomePage';
 import USBPage from './containers/USBPage';
 import NetworkPage from './containers/NetworkPage';
 import CounterPage from './containers/CounterPage';
+import DetailPage from './containers/DetailPage';
 
 export default () => (
   <App>
@@ -13,6 +14,7 @@ export default () => (
       <Route path="/usb" component={USBPage} />
       <Route path="/network" component={NetworkPage} />
       <Route path="/counter" component={CounterPage} />
+      <Route path="/detail/:ip" component={DetailPage} />
       <Route path="/" component={HomePage} />
     </Switch>
   </App>
