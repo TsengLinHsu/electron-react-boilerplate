@@ -36,11 +36,10 @@ export default class Detail extends Component<Props> {
     return (
       <div>
         <div className="sticky-top">
-          <Link to="/network">
-            <button className="btn btn-primary m-2">
-              <i className="fa fa-arrow-left" />
-            </button>
-          </Link>
+          <Link
+            className="btn btn-primary m-2 fa fa-arrow-left fa-3x"
+            to="/network"
+          />
           <button
             className="btn btn-primary m-2"
             onClick={() => updatePrinterDetails(match.params.ip)}

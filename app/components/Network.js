@@ -36,11 +36,7 @@ export default class Network extends Component<Props> {
     return (
       <div>
         <div className="sticky-top">
-          <Link to="/">
-            <button className="btn btn-primary m-2">
-              <i className="fa fa-arrow-left" />
-            </button>
-          </Link>
+          <Link className="btn btn-primary m-2 fa fa-arrow-left fa-3x" to="/" />
           <button className="btn btn-primary m-2" onClick={startBonjour}>
             <i className="fa fa-refresh" />
           </button>
@@ -67,15 +63,14 @@ export default class Network extends Component<Props> {
                       state: { ip: printer.referer.address }
                     }}
                   > */}
-                  <Link to={`/detail/${printer.referer.address}`}>
-                    <button
-                      className="btn btn-primary"
-                      onClick={() =>
-                        togglePrinterDetails(printer.referer.address)
-                      }
-                    >
-                      Details
-                    </button>
+                  <Link
+                    className="btn btn-primary"
+                    to={`/detail/${printer.referer.address}`}
+                    onClick={() =>
+                      togglePrinterDetails(printer.referer.address)
+                    }
+                  >
+                    Details
                   </Link>
                 </CardBody>
               </Card>
