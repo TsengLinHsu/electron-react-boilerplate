@@ -5,20 +5,20 @@ import {
   REMOVE_PRINTER_DETAILS
 } from '../actions/detail';
 
-export type detailStateType = {
-  +detail: Array
-};
+// export type detailStateType = {
+//   +detail: Array
+// };
 
 // type actionType = {
 //   +type: string
 // };
 
-export default function printers(state: Array = [], action) {
+export default function printers(state: JSON = {}, action) {
   switch (action.type) {
     case UPDATE_PRINTER_DETAILS:
       return action.details;
     case REMOVE_PRINTER_DETAILS:
-      return [];
+      return {};
     default:
       return state;
   }

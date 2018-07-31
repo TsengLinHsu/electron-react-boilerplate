@@ -1,18 +1,21 @@
 // @flow
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import styles from './Detail.css';
+import cm315z from '../../resources/imgs/cm315z_full.jpg';
+
+// import styles from './Detail.css';
 
 type Props = {
   updatePrinterDetails: (ip: string) => void,
   removePrinterDetails: () => void,
+  // walkPrinterDetails: (ip: string) => void,
   match: {
     params: {
       ip: string
     }
   },
   // printers: Array,
-  details: Array
+  details: JSON
 };
 
 // function isThisPrinter(printers) {
@@ -30,6 +33,7 @@ export default class Detail extends Component<Props> {
     const {
       updatePrinterDetails,
       removePrinterDetails,
+      // walkPrinterDetails,
       details,
       match
     } = this.props;
@@ -53,14 +57,49 @@ export default class Detail extends Component<Props> {
             <i className="fa fa-minus" />
           </button>
         </div>
+        <img
+          src={cm315z}
+          className="col-4 img-thumbnail rounded float-left m-2"
+          alt="..."
+        />
         <div className="flex m-2">
-          <h1>{match.params.ip}</h1>
-          <div className={styles.printerCard} />
-          {details.map(detail => (
-            <div key={detail.oid}>
-              {detail.oid} {detail.value.toString()}
-            </div>
-          ))}
+          <div className="card">
+            <ul className="list-group list-group-flush">
+              <li className="list-group-item">IP: {details.ip}</li>
+              <li className="list-group-item">Name: {details.name}</li>
+              <li className="list-group-item">
+                Description: {details.description}
+              </li>
+              <li className="list-group-item">
+                Location: {details.location ? details.location : 'N/A'}
+              </li>
+              <li className="list-group-item">
+                {' '}
+                Cyan Toner Cartridge:{' '}
+                {details.cTonerCartridgeRemainCap /
+                  details.cTonerCartridgeFullCap *
+                  100}%
+              </li>
+              <li className="list-group-item">
+                Magenta Toner Cartridge:{' '}
+                {details.mTonerCartridgeRemainCap /
+                  details.mTonerCartridgeFullCap *
+                  100}%
+              </li>
+              <li className="list-group-item">
+                Yellow Toner Cartridge:{' '}
+                {details.yTonerCartridgeRemainCap /
+                  details.yTonerCartridgeFullCap *
+                  100}%
+              </li>
+              <li className="list-group-item">
+                Black Toner Cartridge:{' '}
+                {details.bTonerCartridgeRemainCap /
+                  details.bTonerCartridgeFullCap *
+                  100}%
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     );
