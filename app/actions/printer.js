@@ -1,7 +1,8 @@
 // @flow
 import Bonjour from 'bonjour';
+import fastDeepEqual from 'fast-deep-equal';
 // import snmp from 'net-snmp';
-// import type { printerStateType } from '../reducers/printers';
+import type { printersStateType } from '../reducers/printers';
 
 type actionType = {
   +type: string
@@ -10,19 +11,35 @@ type actionType = {
 export const ADD_NETWORK_PRINTER = 'ADD_NETWORK_PRINTER';
 export const REMOVE_ALL_PRINTER = 'REMOVE_ALL_PRINTER';
 export const TOGGLE_PRINTER_DETAILS = 'TOGGLE_PRINTER_DETAILS';
+export const PRINTER_IS_EXIST = 'PRINTER_IS_EXIST';
 
 export function startBonjour() {
   return (
-    dispatch: (action: actionType) => void
-    // getState: () => printerStateType
+    dispatch: (action: actionType) => void,
+    getState: () => printersStateType
   ) => {
-    dispatch(removeAllPrinter());
-    // const { printers } = getState();
+    // dispatch(removeAllPrinter());
+    const { printers } = getState();
+    // console.log(printers);
 
     const bonjour = Bonjour();
     bonjour.find({ type: 'printer' }, service => {
       // console.log(service);
-      dispatch(addNetworkPrinter(service));
+      let isExist = false;
+      for (let i = 0; i < printers.length; i += 1) {
+        if (fastDeepEqual(printers[i], service)) {
+          isExist = true;
+          break;
+        }
+      }
+
+      if (isExist) {
+        dispatch({
+          type: PRINTER_IS_EXIST
+        });
+      } else {
+        dispatch(addNetworkPrinter(service));
+      }
     });
   };
 }
@@ -85,9 +102,9 @@ export function removeAllPrinter() {
 //   };
 // }
 
-export function togglePrinterDetails(IPv4: string) {
-  return {
-    ipv4: IPv4,
-    type: TOGGLE_PRINTER_DETAILS
-  };
-}
+// export function togglePrinterDetails(IPv4: string) {
+//   return {
+//     ipv4: IPv4,
+//     type: TOGGLE_PRINTER_DETAILS
+//   };
+// }
