@@ -38,6 +38,42 @@ export default class Detail extends Component<Props> {
     this.setState({ collapse: !this.state.collapse });
   }
 
+  renderStatus() {
+    const alertArray = this.props.details.prtAlertEntry;
+    if (alertArray) {
+      const newLocal = (
+        <h4 className="d-flex justify-content-between align-items-center mb-3">
+          <span className="text-muted">Status</span>
+          <span className="badge badge-secondary badge-pill">
+            {alertArray.length}
+          </span>
+        </h4>
+      );
+
+      return newLocal;
+    }
+    return <div />;
+  }
+
+  renderStatusItem() {
+    const alertArray = this.props.details.prtAlertEntry;
+    // console.log(alertArray);
+    if (alertArray) {
+      return alertArray.map(alert => (
+        <li
+          className="list-group-item d-flex justify-content-between lh-condensed"
+          key={alert.prtAlertIndex}
+        >
+          <div>
+            <h6 className="my-0">{alert.prtAlertSeverityLevel}</h6>
+            <small className="text-muted">{alert.prtAlertDescription}</small>
+          </div>
+        </li>
+      ));
+    }
+    return <div />;
+  }
+
   render() {
     const {
       updatePrinterDetails,
@@ -131,40 +167,8 @@ export default class Detail extends Component<Props> {
 
           <div className="row">
             <div className="col-md-4 order-md-2 mb-4">
-              <h4 className="d-flex justify-content-between align-items-center mb-3">
-                <span className="text-muted">Status</span>
-                <span className="badge badge-secondary badge-pill">3</span>
-              </h4>
-              <ul className="list-group mb-3">
-                <li className="list-group-item d-flex justify-content-between bg-light">
-                  <div className="text-warning">
-                    <h6 className="my-0">Warning</h6>
-                    <small>
-                      Cyan Toner Cartridge needs to be replaced.:093-932
-                    </small>
-                  </div>
-                  {/* <span className="text-warning">-$5</span> */}
-                </li>
-                <li className="list-group-item d-flex justify-content-between bg-light">
-                  <div className="text-warning">
-                    <h6 className="my-0">Warning</h6>
-                    <small>Out of Paper.</small>
-                  </div>
-                  {/* <span className="text-warning">-$5</span> */}
-                </li>
-                <li className="list-group-item d-flex justify-content-between lh-condensed">
-                  <div>
-                    <h6 className="my-0">Normal</h6>
-                    <small className="text-muted">Ready/Standby</small>
-                  </div>
-                  {/* <span className="text-muted">$5</span> */}
-                </li>
-                {/* <li className="list-group-item d-flex justify-content-between">
-                  <span>Total (USD)</span>
-                  <strong>$20</strong>
-                </li> */}
-              </ul>
-
+              {this.renderStatus()}
+              <ul className="list-group mb-3">{this.renderStatusItem()}</ul>
               <div className="btn-group" role="group">
                 <button
                   className="btn btn-secondary"
