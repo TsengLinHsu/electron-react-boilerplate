@@ -1,0 +1,7 @@
+{
+  "HOME": "/",
+  "COUNTER": "/counter",
+  "USB": "/usb",
+  "NETWORK": "/network",
+  "DETAIL": "/detail/:ip"
+}

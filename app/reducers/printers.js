@@ -6,10 +6,6 @@ import {
   // TOGGLE_PRINTER_DETAILS
 } from '../actions/printer';
 
-export type printersStateType = {
-  +printers: Array
-};
-
 // type actionType = {
 //   +type: string
 // };

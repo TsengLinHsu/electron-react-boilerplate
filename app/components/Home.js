@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import routes from '../constants/routes.json';
 // import styles from './Home.css';
 
 type Props = {};
@@ -32,7 +33,7 @@ export default class Home extends Component<Props> {
           <h1 className="cover-heading">Start to discovery.</h1>
           <p className="lead">Discovery your printer by USB and Network.</p>
           <p className="lead">
-            <Link className="btn btn-lg btn-outline-dark " to="/network">
+            <Link className="btn btn-lg btn-outline-dark " to={routes.NETWORK}>
               Start
             </Link>
           </p>

@@ -1,8 +1,7 @@
 // @flow
 import Bonjour from 'bonjour';
 import fastDeepEqual from 'fast-deep-equal';
-// import snmp from 'net-snmp';
-import type { printersStateType } from '../reducers/printers';
+import type { printersStateType } from '../reducers/types';
 
 type actionType = {
   +type: string
