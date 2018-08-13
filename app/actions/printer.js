@@ -1,6 +1,5 @@
 // @flow
 import Bonjour from 'bonjour';
-import fastDeepEqual from 'fast-deep-equal';
 import type { printersStateType } from '../reducers/types';
 
 type actionType = {
@@ -22,11 +21,11 @@ export function startBonjour() {
     // console.log(printers);
 
     const bonjour = Bonjour();
-    bonjour.find({ type: 'printer' }, service => {
+    const browser = bonjour.find({ type: 'printer' }, service => {
       // console.log(service);
       let isExist = false;
       for (let i = 0; i < printers.length; i += 1) {
-        if (fastDeepEqual(printers[i], service)) {
+        if (printers[i].name === service.name) {
           isExist = true;
           break;
         }
@@ -40,6 +39,9 @@ export function startBonjour() {
         dispatch(addNetworkPrinter(service));
       }
     });
+
+    /* Stop searching after 15 seconds */
+    setTimeout(() => browser.stop(), 15 * 1000);
   };
 }
 
