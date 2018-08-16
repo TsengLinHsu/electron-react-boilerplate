@@ -55,7 +55,7 @@ export function updatePrinterDetails(ip: string) {
 
     function pollDeviceDetails(session, device, pollCb) {
       const newDevice = device;
-      console.log('getting system properties...');
+      // console.log('getting system properties...');
       const oids = [
         '1.3.6.1.2.1.1.5.0',
         '1.3.6.1.2.1.1.6.0',
@@ -86,7 +86,7 @@ export function updatePrinterDetails(ip: string) {
 
     function pollDeviceStatus(session, device, pollCb) {
       const newDevice = device;
-      console.log('getting alert status...');
+      // console.log('getting alert status...');
 
       // 1.3.6.1.2.1.43.18.1.1.2
       // prtAlertSeverityLevel OBJECT-TYPE
@@ -252,7 +252,7 @@ export function updatePrinterDetails(ip: string) {
 
     function pollDeviceFullCap(session, device, pollCb) {
       const newDevice = device;
-      console.log('getting full cap...');
+      // console.log('getting full cap...');
       const oids = [
         '1.3.6.1.2.1.43.11.1.1.8.1.1',
         '1.3.6.1.2.1.43.11.1.1.8.1.2',
@@ -294,7 +294,7 @@ export function updatePrinterDetails(ip: string) {
 
     function pollDeviceRemainCap(session, device, pollCb) {
       const newDevice = device;
-      console.log('getting remain cap...');
+      // console.log('getting remain cap...');
       const oids = [
         '1.3.6.1.2.1.43.11.1.1.9.1.1',
         '1.3.6.1.2.1.43.11.1.1.9.1.2',
@@ -349,7 +349,7 @@ export function updatePrinterDetails(ip: string) {
 
     function pollCoverStatus(session, device, pollCb) {
       const newDevice = device;
-      console.log('getting Cover status...');
+      // console.log('getting Cover status...');
       const oids = [
         '1.3.6.1.2.1.43.6.1.1.3.1.1',
         '1.3.6.1.2.1.43.6.1.1.3.1.2',
@@ -394,7 +394,6 @@ export function updatePrinterDetails(ip: string) {
       if (error) {
         console.error(error.toString());
       } else {
-        // console.warn(util.inspect(device, { depth: 3 }));
         session.close();
 
         if (fastDeepEqual(details, device)) {
@@ -402,16 +401,15 @@ export function updatePrinterDetails(ip: string) {
             type: DETAIL_IS_THE_SAME
           });
         } else {
-          dispatch(addPrinterDetails(ip, device));
+          dispatch(addPrinterDetails(device));
         }
       }
     });
   };
 }
 
-export function addPrinterDetails(ip: string, Details) {
+export function addPrinterDetails(Details) {
   return {
-    ipv4: ip,
     details: Details,
     type: UPDATE_PRINTER_DETAILS
   };

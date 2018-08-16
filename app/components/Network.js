@@ -1,47 +1,36 @@
 // @flow
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Collapse } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './Network.css';
 import cm315z from '../../resources/imgs/cm315z.jpg';
 
-type Props = {
-  startBonjour: () => void,
-  removeAllPrinter: () => void,
-  // togglePrinterDetails: (IPv4: string) => void,
-  removePrinterDetails: () => void,
-  printers: Array
-};
-
-export default class Network extends Component<Props> {
-  props: Props;
-
+export default class Network extends Component {
   constructor(props) {
     super(props);
-    this.toggle = this.toggle.bind(this);
     this.state = { collapse: false };
+    this.toggle = () =>
+      this.setState(prevState => ({ collapse: !prevState.collapse }));
   }
 
   componentWillMount() {
-    this.props.startBonjour();
-  }
-
-  toggle() {
-    this.setState({ collapse: !this.state.collapse });
+    const { startBonjour } = this.props;
+    startBonjour();
   }
 
   render() {
     const {
       startBonjour,
       removeAllPrinter,
-      // togglePrinterDetails,
       removePrinterDetails,
       printers
     } = this.props;
+    const { collapse } = this.state;
     return (
       <div>
         <header className="sticky-top">
-          <Collapse className="bg-dark" isOpen={this.state.collapse}>
+          <Collapse className="bg-dark" isOpen={collapse}>
             <div className="container">
               <div className="row">
                 <div className="col-sm-8 col-md-7 py-4">
@@ -99,7 +88,11 @@ export default class Network extends Component<Props> {
                 </svg>
                 <strong>Home</strong>
               </a>
-              <button className="navbar-toggler" onClick={this.toggle}>
+              <button
+                className="navbar-toggler"
+                onClick={this.toggle}
+                type="button"
+              >
                 <span className="navbar-toggler-icon" />
               </button>
             </div>
@@ -119,12 +112,17 @@ export default class Network extends Component<Props> {
               </h1>
               <p className="lead text-muted">Time to discovery your printer.</p>
               <p>
-                <button className="btn btn-primary m-1" onClick={startBonjour}>
+                <button
+                  className="btn btn-primary m-1"
+                  onClick={startBonjour}
+                  type="button"
+                >
                   Refresh
                 </button>
                 <button
                   className="btn btn-secondary m-1"
                   onClick={removeAllPrinter}
+                  type="button"
                 >
                   Clear
                 </button>
@@ -167,3 +165,14 @@ export default class Network extends Component<Props> {
     );
   }
 }
+
+Network.propTypes = {
+  startBonjour: PropTypes.func.isRequired,
+  removeAllPrinter: PropTypes.func.isRequired,
+  removePrinterDetails: PropTypes.func.isRequired,
+  printers: PropTypes.arrayOf(PropTypes.object)
+};
+
+Network.defaultProps = {
+  printers: []
+};

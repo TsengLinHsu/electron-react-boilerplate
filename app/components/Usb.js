@@ -13,10 +13,10 @@ export default class Usb extends Component<Props> {
       <div>
         <div className="sticky-top">
           <Link className="btn btn-primary m-2 fa fa-arrow-left fa-3x" to="/" />
-          <button className="btn btn-primary m-2">
+          <button className="btn btn-primary m-2" type="button">
             <i className="fa fa-refresh" />
           </button>
-          <button className="btn btn-primary m-2">
+          <button className="btn btn-primary m-2" type="button">
             <i className="fa fa-minus" />
           </button>
         </div>
