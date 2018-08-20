@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Collapse } from 'reactstrap';
-import { Link } from 'react-router-dom';
 import './Detail.css';
 import cm315z from '../../resources/imgs/cm315z.jpg';
 
@@ -25,7 +24,8 @@ export default class Detail extends Component {
       removePrinterDetails,
       walkPrinterDetails,
       details,
-      match
+      match,
+      history
     } = this.props;
     const { collapse } = this.state;
     return (
@@ -69,9 +69,10 @@ export default class Detail extends Component {
           </Collapse>
           <div className="navbar navbar-dark bg-dark shadow-sm">
             <div className="container d-flex justify-content-between">
-              <Link
-                to="/network"
-                className="navbar-brand d-flex align-items-center"
+              <button
+                type="button"
+                className="p-0 btn bg-transparent text-white navbar-brand d-flex align-items-center"
+                onClick={() => history.goBack()}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -91,9 +92,9 @@ export default class Detail extends Component {
                   />
                 </svg>
                 <strong>Back</strong>
-              </Link>
+              </button>
               <button
-                className="navbar-toggler"
+                className="p-0 btn bg-transparent text-white navbar-brand d-flex align-items-center"
                 onClick={() => this.toggle()}
                 type="button"
               >
@@ -247,6 +248,14 @@ Detail.propTypes = {
   ),
   match: PropTypes.objectOf(
     PropTypes.oneOfType([PropTypes.string, PropTypes.bool, PropTypes.object])
+  ).isRequired,
+  history: PropTypes.objectOf(
+    PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+      PropTypes.object,
+      PropTypes.func
+    ])
   ).isRequired
 };
 

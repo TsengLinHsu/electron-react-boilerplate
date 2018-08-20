@@ -24,7 +24,8 @@ export default class Network extends Component {
       startBonjour,
       removeAllPrinter,
       removePrinterDetails,
-      printers
+      printers,
+      history
     } = this.props;
     const { collapse } = this.state;
     return (
@@ -68,7 +69,11 @@ export default class Network extends Component {
           </Collapse>
           <div className="navbar navbar-dark bg-dark shadow-sm">
             <div className="container d-flex justify-content-between">
-              <a href="#" className="navbar-brand d-flex align-items-center">
+              <button
+                type="button"
+                className="p-0 btn bg-transparent text-white navbar-brand d-flex align-items-center"
+                onClick={() => history.goBack()}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
@@ -87,9 +92,9 @@ export default class Network extends Component {
                   />
                 </svg>
                 <strong>Home</strong>
-              </a>
+              </button>
               <button
-                className="navbar-toggler"
+                className="p-0 btn bg-transparent navbar-brand d-flex"
                 onClick={this.toggle}
                 type="button"
               >
@@ -170,7 +175,15 @@ Network.propTypes = {
   startBonjour: PropTypes.func.isRequired,
   removeAllPrinter: PropTypes.func.isRequired,
   removePrinterDetails: PropTypes.func.isRequired,
-  printers: PropTypes.arrayOf(PropTypes.object)
+  printers: PropTypes.arrayOf(PropTypes.object),
+  history: PropTypes.objectOf(
+    PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+      PropTypes.object,
+      PropTypes.func
+    ])
+  ).isRequired
 };
 
 Network.defaultProps = {
