@@ -1,5 +1,7 @@
 // @flow
 import Bonjour from 'bonjour';
+import low from 'lowdb';
+import LocalStorage from 'lowdb/adapters/LocalStorage';
 import type { printersStateType } from '../reducers/types';
 
 type actionType = {
@@ -17,15 +19,49 @@ export function startBonjour() {
     getState: () => printersStateType
   ) => {
     // dispatch(removeAllPrinter());
-    const { printers } = getState();
     // console.log(printers);
+
+    const adapter = new LocalStorage('db');
+    const db = low(adapter);
+    // db.unset('printers').write();
+    db.defaults({ printers: [] }).write();
+    const localPrinters = db.getState();
+
+    // console.log(localPrinters);
+
+    localPrinters.printers.map(localPrinter => {
+      const { printers } = getState();
+
+      let isExist = false;
+      for (let i = 0; i < printers.length; i += 1) {
+        if (
+          printers[i].name === localPrinter.name ||
+          printers[i].referer.address === localPrinter.referer.address
+        ) {
+          isExist = true;
+          break;
+        }
+      }
+
+      if (isExist) {
+        return dispatch({
+          type: PRINTER_IS_EXIST
+        });
+      }
+      return dispatch(addNetworkPrinter(localPrinter));
+    });
 
     const bonjour = Bonjour();
     const browser = bonjour.find({ type: 'printer' }, service => {
-      // console.log(service);
+      const { printers } = getState();
+
+      // console.log(service, printers);
       let isExist = false;
       for (let i = 0; i < printers.length; i += 1) {
-        if (printers[i].name === service.name) {
+        if (
+          printers[i].name === service.name ||
+          printers[i].referer.address === service.referer.address
+        ) {
           isExist = true;
           break;
         }
@@ -53,6 +89,9 @@ export function addNetworkPrinter(Service) {
 }
 
 export function removeAllPrinter() {
+  const adapter = new LocalStorage('db');
+  const db = low(adapter);
+  db.unset('printers').write();
   return {
     type: REMOVE_ALL_PRINTER
   };

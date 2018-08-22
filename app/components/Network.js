@@ -1,17 +1,20 @@
 // @flow
 import React, { Component } from 'react';
+import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import PropTypes from 'prop-types';
-import { Collapse } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import low from 'lowdb';
+import LocalStorage from 'lowdb/adapters/LocalStorage';
 import './Network.css';
 import cm315z from '../../resources/imgs/cm315z.jpg';
 
 export default class Network extends Component {
   constructor(props) {
     super(props);
-    this.state = { collapse: false };
-    this.toggle = () =>
-      this.setState(prevState => ({ collapse: !prevState.collapse }));
+    this.state = { modal: false, printerName: '', printerAddress: '' };
+    this.toggle = this.toggle.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentWillMount() {
@@ -19,90 +22,125 @@ export default class Network extends Component {
     startBonjour();
   }
 
+  handleInputChange({ target }) {
+    const { value, name } = target;
+
+    this.setState({
+      [name]: value
+    });
+  }
+
+  handleSubmit(event) {
+    const { addNetworkPrinter } = this.props;
+    const { printerName, printerAddress } = this.state;
+    const service = {
+      name: printerName,
+      referer: {
+        address: printerAddress
+      }
+    };
+    const { printers } = this.props;
+    let isExist = false;
+    for (let i = 0; i < printers.length; i += 1) {
+      if (
+        printers[i].name === service.name ||
+        printers[i].referer.address === service.referer.address
+      ) {
+        isExist = true;
+        break;
+      }
+    }
+
+    if (isExist) {
+      console.log('123123');
+    } else {
+      addNetworkPrinter(service);
+
+      const adapter = new LocalStorage('db');
+      const db = low(adapter);
+      db.get('printers')
+        .push(service)
+        .write();
+
+      this.toggle();
+    }
+    event.preventDefault();
+  }
+
+  toggle() {
+    this.setState(prevState => ({ modal: !prevState.modal }));
+  }
+
   render() {
     const {
       startBonjour,
       removeAllPrinter,
       removePrinterDetails,
-      printers,
-      history
+      printers
     } = this.props;
-    const { collapse } = this.state;
-    return (
-      <div>
-        <header className="sticky-top">
-          <Collapse className="bg-dark" isOpen={collapse}>
-            <div className="container">
-              <div className="row">
-                <div className="col-sm-8 col-md-7 py-4">
-                  <h4 className="text-white">About</h4>
-                  <p className="text-muted">
-                    Add some information about the album below, the author, or
-                    any other background context. Make it a few sentences long
-                    so folks can pick up some informative tidbits. Then, link
-                    them off to some social networking sites or contact
-                    information.
-                  </p>
-                </div>
-                <div className="col-sm-4 offset-md-1 py-4">
-                  <h4 className="text-white">Contact</h4>
-                  <ul className="list-unstyled">
-                    <li>
-                      <a href="#" className="text-white">
-                        Follow on Twitter
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" className="text-white">
-                        Like on Facebook
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" className="text-white">
-                        Email me
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </Collapse>
-          <div className="navbar navbar-dark bg-dark shadow-sm">
-            <div className="container d-flex justify-content-between">
-              <button
-                type="button"
-                className="p-0 btn bg-transparent text-white navbar-brand d-flex align-items-center"
-                onClick={() => history.goBack()}
+    const { modal, printerName, printerAddress } = this.state;
+
+    const printerCards = printers.map(printer => (
+      <div className="col-md-4" key={printer.name}>
+        <div className="card mb-4 shadow-sm">
+          <img src={cm315z} className="card-img-top" alt="" />
+          <div className="card-body">
+            <p className="card-text">{printer.name}</p>
+            <div className="d-flex justify-content-between align-items-center">
+              <Link
+                className="btn btn-sm btn-outline-secondary"
+                to={`/detail/${printer.referer.address}`}
+                onClick={() => removePrinterDetails()}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="mr-2"
-                >
-                  <path
-                    xmlns="http://www.w3.org/2000/svg"
-                    d="M10,19v-5h4v5c0,0.55,0.45,1,1,1h3c0.55,0,1-0.45,1-1v-7h1.7c0.46,0,0.68-0.57,0.33-0.87L12.67,3.6   c-0.38-0.34-0.96-0.34-1.34,0l-8.36,7.53C2.63,11.43,2.84,12,3.3,12H5v7c0,0.55,0.45,1,1,1h3C9.55,20,10,19.55,10,19z"
-                  />
-                </svg>
-                <strong>Home</strong>
-              </button>
-              <button
-                className="p-0 btn bg-transparent navbar-brand d-flex"
-                onClick={this.toggle}
-                type="button"
-              >
-                <span className="navbar-toggler-icon" />
-              </button>
+                Details
+              </Link>
+              <small className="text-muted">
+                IP: {printer.referer.address}
+              </small>
             </div>
           </div>
-        </header>
+        </div>
+      </div>
+    ));
+
+    return (
+      <div>
+        <Modal isOpen={modal} toggle={this.toggle} fade={false} centered>
+          <ModalHeader toggle={this.toggle}>Add Printer</ModalHeader>
+          <ModalBody>
+            <form onSubmit={this.handleSubmit}>
+              <div className="form-group">
+                <p>Name</p>
+                <input
+                  className="form-control"
+                  name="printerName"
+                  type="text"
+                  value={printerName}
+                  onChange={this.handleInputChange}
+                />
+              </div>
+              <div className="form-group">
+                <p>IP Address</p>
+                <input
+                  className="form-control"
+                  name="printerAddress"
+                  type="text"
+                  value={printerAddress}
+                  required
+                  pattern="^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
+                  onChange={this.handleInputChange}
+                />
+              </div>
+              <div className="text-right">
+                <input
+                  className="btn btn-outline-secondary "
+                  type="submit"
+                  value="Add"
+                />
+              </div>
+            </form>
+          </ModalBody>
+        </Modal>
         <main role="main">
           <section
             className="jumbotron text-center"
@@ -137,28 +175,17 @@ export default class Network extends Component {
           <div className="album py-5 bg-light">
             <div className="container">
               <div className="row">
-                {printers.map(printer => (
-                  <div className="col-md-4" key={printer.name}>
-                    <div className="card mb-4 shadow-sm">
-                      <img src={cm315z} className="card-img-top" alt="" />
-                      <div className="card-body">
-                        <p className="card-text">{printer.name}</p>
-                        <div className="d-flex justify-content-between align-items-center">
-                          <Link
-                            className="btn btn-sm btn-outline-secondary"
-                            to={`/detail/${printer.referer.address}`}
-                            onClick={() => removePrinterDetails()}
-                          >
-                            Details
-                          </Link>
-                          <small className="text-muted">
-                            IP: {printer.referer.address}
-                          </small>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                {printerCards}
+                <div className="h-100">
+                  <button
+                    className="btn btn-sm btn-outline-secondary ml-3"
+                    style={{ width: '5rem', height: '5rem' }}
+                    onClick={() => this.toggle()}
+                    type="button"
+                  >
+                    Add...
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -173,17 +200,10 @@ export default class Network extends Component {
 
 Network.propTypes = {
   startBonjour: PropTypes.func.isRequired,
+  addNetworkPrinter: PropTypes.func.isRequired,
   removeAllPrinter: PropTypes.func.isRequired,
   removePrinterDetails: PropTypes.func.isRequired,
-  printers: PropTypes.arrayOf(PropTypes.object),
-  history: PropTypes.objectOf(
-    PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number,
-      PropTypes.object,
-      PropTypes.func
-    ])
-  ).isRequired
+  printers: PropTypes.arrayOf(PropTypes.object)
 };
 
 Network.defaultProps = {

@@ -338,9 +338,11 @@ export function updatePrinterDetails(ip: string) {
       switch (status) {
         case 1:
           return 'Unknown';
-        case (3, 5):
+        case 3:
+        case 5:
           return 'Open';
-        case (4, 6):
+        case 4:
+        case 6:
           return 'Closed';
         default:
           return 'Unknown';

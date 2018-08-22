@@ -1,7 +1,7 @@
 {
   "HOME": "/",
+  "ABOUT": "/about",
   "COUNTER": "/counter",
-  "USB": "/usb",
   "NETWORK": "/network",
   "DETAIL": "/detail/:ip"
 }
