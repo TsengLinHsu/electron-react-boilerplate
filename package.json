@@ -207,12 +207,12 @@
     "yarn": "^1.9.2"
   },
   "dependencies": {
-    "bootstrap": "4.1.1",
+    "@fortawesome/fontawesome-free": "^5.2.0",
     "devtron": "^1.4.0",
     "electron-debug": "^2.0.0",
     "fast-deep-equal": "^2.0.1",
-    "@fortawesome/fontawesome-free": "^5.2.0",
     "history": "^4.7.2",
+    "lowdb": "^1.0.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-hot-loader": "^4.3.4",
