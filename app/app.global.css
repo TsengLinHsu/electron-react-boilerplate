@@ -5,9 +5,3 @@
 
 @import '~@fortawesome/fontawesome-free/css/all.css';
 @import 'bootstrap.css';
-
-html,
-body,
-#root {
-  height: 100%;
-}

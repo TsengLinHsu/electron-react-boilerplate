@@ -1,21 +1,32 @@
 // @flow
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import './Detail.css';
 import cm315z from '../../resources/imgs/cm315z.jpg';
+import type { Printer } from '../reducers/types';
 
-export default class Detail extends Component {
-  componentDidMount() {
-    const { updatePrinterDetails, match } = this.props;
-    updatePrinterDetails(match.params.ip);
+type Props = {
+  updatePrinterDetails: () => void,
+  removePrinterDetails: () => void,
+  walkPrinterDetails: () => void,
+  printers?: Array<Printer>,
+  match: {
+    params: {
+      address: string
+    }
   }
+};
+
+export default class Detail extends Component<Props> {
+  static defaultProps = {
+    printers: []
+  };
 
   render() {
     const {
       updatePrinterDetails,
-      removePrinterDetails,
-      walkPrinterDetails,
-      details,
+      // removePrinterDetails,
+      // walkPrinterDetails,
+      printers,
       match
     } = this.props;
 
@@ -45,6 +56,141 @@ export default class Detail extends Component {
       </div>
     );
 
+    const MainDetails = () => {
+      if (printers.length <= 0) {
+        return <div />;
+      }
+
+      const result = printers.find(
+        printer => printer.address === match.params.address
+      );
+      if (!result.details) {
+        return <div />;
+      }
+
+      const { details } = result;
+      if (!details) {
+        return <div />;
+      }
+
+      return (
+        <div className="row">
+          <div className="col-md-4 order-md-2 mb-4">
+            {details.prtAlertEntry ? (
+              <AlertList alerts={details.prtAlertEntry} />
+            ) : null}
+            <div className="btn-group" role="group">
+              <button
+                className="btn btn-secondary"
+                onClick={() => updatePrinterDetails(match.params.address)}
+                type="button"
+              >
+                Refresh
+              </button>
+              {/* <button
+                  className="btn btn-secondary"
+                  onClick={() => removePrinterDetails(match.params.address)}
+                  type="button"
+                >
+                  Clear
+                </button>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => walkPrinterDetails(match.params.address)}
+                  type="button"
+                >
+                  Walk
+                </button> */}
+            </div>
+          </div>
+          <div className="col-md-8 order-md-1">
+            <h4 className="mb-3">Details</h4>
+            <dl>
+              <dt>Product Name:</dt>
+              <dd>{details.productName}</dd>
+              <dt>Name:</dt>
+              <dd>{details.name}</dd>
+              <dt>Serial Number:</dt>
+              <dd>{details.serialNumber}</dd>
+              <dt>IP:</dt>
+              <dd>{details.address}</dd>
+              <dt>Location:</dt>
+              <dd>{details.location ? details.location : 'N/A'}</dd>
+              <dt>Cyan Toner Cartridge:</dt>
+              <dd>
+                {(details.cTonerCartridgeRemainCap /
+                  details.cTonerCartridgeFullCap) *
+                  100}
+                %
+              </dd>
+              <dt>Magenta Toner Cartridge:</dt>
+              <dd>
+                {(details.mTonerCartridgeRemainCap /
+                  details.mTonerCartridgeFullCap) *
+                  100}
+                %
+              </dd>
+              <dt>Yellow Toner Cartridge:</dt>
+              <dd>
+                {(details.yTonerCartridgeRemainCap /
+                  details.yTonerCartridgeFullCap) *
+                  100}
+                %
+              </dd>
+              <dt>Black Toner Cartridge:</dt>
+              <dd>
+                {(details.bTonerCartridgeRemainCap /
+                  details.bTonerCartridgeFullCap) *
+                  100}
+                %
+              </dd>
+              <dt>Cyan Drum Cartridge:</dt>
+              <dd>
+                {(details.cDrumCartridgeRemainCap /
+                  details.cDrumCartridgeFullCap) *
+                  100}
+                %
+              </dd>
+              <dt>Magenta Drum Cartridge:</dt>
+              <dd>
+                {(details.mDrumCartridgeRemainCap /
+                  details.mDrumCartridgeFullCap) *
+                  100}
+                %
+              </dd>
+              <dt>Yellow Drum Cartridge:</dt>
+              <dd>
+                {(details.yDrumCartridgeRemainCap /
+                  details.yDrumCartridgeFullCap) *
+                  100}
+                %
+              </dd>
+              <dt>Black Drum Cartridge:</dt>
+              <dd>
+                {(details.bDrumCartridgeRemainCap /
+                  details.bDrumCartridgeFullCap) *
+                  100}
+                %
+              </dd>
+              <dt>Waste Toner Box:</dt>
+              <dd>
+                {(details.wasteTonerBoxRemainCap /
+                  details.wasteTonerBoxFullCap) *
+                  100}
+                %
+              </dd>
+              <dt>Right Side Cover:</dt>
+              <dd>{details.rightSideCover}</dd>
+              <dt>Rear Cover:</dt>
+              <dd>{details.rearCover}</dd>
+              <dt>DADF Cover:</dt>
+              <dd>{details.dadfCover}</dd>
+            </dl>
+          </div>
+        </div>
+      );
+    };
+
     return (
       <div>
         <div className="container">
@@ -59,121 +205,7 @@ export default class Detail extends Component {
             </p> */}
           </div>
 
-          <div className="row">
-            <div className="col-md-4 order-md-2 mb-4">
-              {details.prtAlertEntry ? (
-                <AlertList alerts={details.prtAlertEntry} />
-              ) : null}
-              <div className="btn-group" role="group">
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => updatePrinterDetails(match.params.ip)}
-                  type="button"
-                >
-                  Refresh
-                </button>
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => removePrinterDetails()}
-                  type="button"
-                >
-                  Clear
-                </button>
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => walkPrinterDetails(match.params.ip)}
-                  type="button"
-                >
-                  Walk
-                </button>
-              </div>
-            </div>
-            <div className="col-md-8 order-md-1">
-              <h4 className="mb-3">Details</h4>
-              <dl>
-                <dt>Product Name:</dt>
-                <dd>{details.productName}</dd>
-                <dt>Name:</dt>
-                <dd>{details.name}</dd>
-                <dt>Serial Number:</dt>
-                <dd>{details.serialNumber}</dd>
-                <dt>IP:</dt>
-                <dd>{details.ip}</dd>
-                <dt>Location:</dt>
-                <dd>{details.location ? details.location : 'N/A'}</dd>
-                <dt>Cyan Toner Cartridge:</dt>
-                <dd>
-                  {(details.cTonerCartridgeRemainCap /
-                    details.cTonerCartridgeFullCap) *
-                    100}
-                  %
-                </dd>
-                <dt>Magenta Toner Cartridge:</dt>
-                <dd>
-                  {(details.mTonerCartridgeRemainCap /
-                    details.mTonerCartridgeFullCap) *
-                    100}
-                  %
-                </dd>
-                <dt>Yellow Toner Cartridge:</dt>
-                <dd>
-                  {(details.yTonerCartridgeRemainCap /
-                    details.yTonerCartridgeFullCap) *
-                    100}
-                  %
-                </dd>
-                <dt>Black Toner Cartridge:</dt>
-                <dd>
-                  {(details.bTonerCartridgeRemainCap /
-                    details.bTonerCartridgeFullCap) *
-                    100}
-                  %
-                </dd>
-                <dt>Cyan Drum Cartridge:</dt>
-                <dd>
-                  {(details.cDrumCartridgeRemainCap /
-                    details.cDrumCartridgeFullCap) *
-                    100}
-                  %
-                </dd>
-                <dt>Magenta Drum Cartridge:</dt>
-                <dd>
-                  {(details.mDrumCartridgeRemainCap /
-                    details.mDrumCartridgeFullCap) *
-                    100}
-                  %
-                </dd>
-                <dt>Yellow Drum Cartridge:</dt>
-                <dd>
-                  {(details.yDrumCartridgeRemainCap /
-                    details.yDrumCartridgeFullCap) *
-                    100}
-                  %
-                </dd>
-                <dt>Black Drum Cartridge:</dt>
-                <dd>
-                  {(details.bDrumCartridgeRemainCap /
-                    details.bDrumCartridgeFullCap) *
-                    100}
-                  %
-                </dd>
-                <dt>Waste Toner Box:</dt>
-                <dd>
-                  {(details.wasteTonerBoxRemainCap /
-                    details.wasteTonerBoxFullCap) *
-                    100}
-                  %
-                </dd>
-                <dt>Right Side Cover:</dt>
-                <dd>{details.rightSideCover}</dd>
-                <dt>Rear Cover:</dt>
-                <dd>{details.rearCover}</dd>
-                <dt>DADF Cover:</dt>
-                <dd>{details.dadfCover}</dd>
-              </dl>
-            </div>
-          </div>
-
+          <MainDetails />
           <footer className="my-5 pt-5 text-muted text-center text-small">
             <p className="mb-1">© 2017-2018 Company Name</p>
           </footer>
@@ -182,19 +214,3 @@ export default class Detail extends Component {
     );
   }
 }
-
-Detail.propTypes = {
-  updatePrinterDetails: PropTypes.func.isRequired,
-  removePrinterDetails: PropTypes.func.isRequired,
-  walkPrinterDetails: PropTypes.func.isRequired,
-  details: PropTypes.objectOf(
-    PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.array])
-  ),
-  match: PropTypes.objectOf(
-    PropTypes.oneOfType([PropTypes.string, PropTypes.bool, PropTypes.object])
-  ).isRequired
-};
-
-Detail.defaultProps = {
-  details: null
-};

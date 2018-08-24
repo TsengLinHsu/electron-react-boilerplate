@@ -1,14 +1,26 @@
 // @flow
 import React, { Component } from 'react';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import low from 'lowdb';
 import LocalStorage from 'lowdb/adapters/LocalStorage';
 import './Network.css';
 import cm315z from '../../resources/imgs/cm315z.jpg';
 
-export default class Network extends Component {
+type Props = {
+  startBonjour: () => void,
+  addPrinterAndUpdateAlive: () => void,
+  removeAllPrinter: () => void,
+  updatePrinterDetails: () => void,
+  checkPrinterAlive: () => void,
+  printers?: Array<Printer>
+};
+
+export default class Network extends Component<Props> {
+  static defaultProps = {
+    printers: []
+  };
+
   constructor(props) {
     super(props);
     this.state = { modal: false, printerName: '', printerAddress: '' };
@@ -22,6 +34,13 @@ export default class Network extends Component {
     startBonjour();
   }
 
+  componentDidMount() {
+    const { checkPrinterAlive } = this.props;
+    setInterval(() => checkPrinterAlive(), 60000);
+  }
+
+  componentWillUnmount() {}
+
   handleInputChange({ target }) {
     const { value, name } = target;
 
@@ -31,33 +50,30 @@ export default class Network extends Component {
   }
 
   handleSubmit(event) {
-    const { addNetworkPrinter } = this.props;
+    const { addPrinterAndUpdateAlive } = this.props;
     const { printerName, printerAddress } = this.state;
     const service = {
       name: printerName,
-      referer: {
-        address: printerAddress
-      }
+      address: printerAddress
     };
     const { printers } = this.props;
     let isExist = false;
     for (let i = 0; i < printers.length; i += 1) {
       if (
         printers[i].name === service.name ||
-        printers[i].referer.address === service.referer.address
+        printers[i].address === service.address
       ) {
         isExist = true;
         break;
       }
     }
 
-    if (isExist) {
-      console.log('123123');
-    } else {
-      addNetworkPrinter(service);
+    if (!isExist) {
+      addPrinterAndUpdateAlive(service);
 
       const adapter = new LocalStorage('db');
       const db = low(adapter);
+      db.defaults({ printers: [] }).write();
       db.get('printers')
         .push(service)
         .write();
@@ -75,28 +91,40 @@ export default class Network extends Component {
     const {
       startBonjour,
       removeAllPrinter,
-      removePrinterDetails,
+      updatePrinterDetails,
+
       printers
     } = this.props;
     const { modal, printerName, printerAddress } = this.state;
+
+    const AliveBadges = ({ alive }) => {
+      if (alive === undefined) {
+        return <span className="badge badge-primary">Checking</span>;
+      }
+
+      return alive ? (
+        <span className="badge badge-success">Online</span>
+      ) : (
+        <span className="badge badge-danger">Offline</span>
+      );
+    };
 
     const printerCards = printers.map(printer => (
       <div className="col-md-4" key={printer.name}>
         <div className="card mb-4 shadow-sm">
           <img src={cm315z} className="card-img-top" alt="" />
           <div className="card-body">
+            <AliveBadges alive={printer.alive} />
             <p className="card-text">{printer.name}</p>
             <div className="d-flex justify-content-between align-items-center">
               <Link
                 className="btn btn-sm btn-outline-secondary"
-                to={`/detail/${printer.referer.address}`}
-                onClick={() => removePrinterDetails()}
+                to={`/detail/${printer.address}`}
+                onClick={() => updatePrinterDetails(printer.address)}
               >
                 Details
               </Link>
-              <small className="text-muted">
-                IP: {printer.referer.address}
-              </small>
+              <small className="text-muted">IP: {printer.address}</small>
             </div>
           </div>
         </div>
@@ -197,15 +225,3 @@ export default class Network extends Component {
     );
   }
 }
-
-Network.propTypes = {
-  startBonjour: PropTypes.func.isRequired,
-  addNetworkPrinter: PropTypes.func.isRequired,
-  removeAllPrinter: PropTypes.func.isRequired,
-  removePrinterDetails: PropTypes.func.isRequired,
-  printers: PropTypes.arrayOf(PropTypes.object)
-};
-
-Network.defaultProps = {
-  printers: []
-};

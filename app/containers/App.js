@@ -1,11 +1,14 @@
 // @flow
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Collapse } from 'reactstrap';
 import routes from '../constants/routes.json';
 
-export default class App extends React.Component {
+type Props = {
+  children: React.Node
+};
+
+export default class App extends React.Component<Props> {
   constructor(props) {
     super(props);
     this.state = { collapse: false };
@@ -96,7 +99,3 @@ export default class App extends React.Component {
     );
   }
 }
-
-App.propTypes = {
-  children: PropTypes.element.isRequired
-};

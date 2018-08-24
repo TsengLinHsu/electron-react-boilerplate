@@ -1,17 +1,19 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Detail from '../components/Detail';
-import * as DetailActions from '../actions/detail';
+import * as PrinterActions from '../actions/printer';
 
 function mapStateToProps(state) {
   return {
-    printers: state.printers,
-    details: state.details
+    printers: state.printers
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(DetailActions, dispatch);
+  return bindActionCreators(PrinterActions, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Detail);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Detail);

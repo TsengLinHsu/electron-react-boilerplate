@@ -1,22 +1,51 @@
 import type { Dispatch as ReduxDispatch, Store as ReduxStore } from 'redux';
 
-export type counterStateType = {
-  +counter: number
+type State = {
+  +counter: number,
+  +printers: Array<Printer>,
+  +activeDetail?: string
+  // ...
 };
 
-export type detailsStateType = {
-  +details: object
-};
-
-export type printersStateType = {
-  +printers: Array
+export type Printer = {
+  +name: string,
+  +address: string,
+  +alive?: boolean,
+  +details?: {
+    +sysName?: string,
+    +sysLocation?: string,
+    +prtAlerts?: PrinterAlerts
+  }
 };
 
 export type Action = {
-  +type: string
+  type: string,
+  printerShortInfo?: ShortInfo,
+  printerDetailInfo?: DetailInfo
 };
 
-export type GetState = () => counterStateType;
+export type ShortInfo = {
+  name: string,
+  address: string,
+  alive?: boolean
+};
+
+export type DetailInfo = {
+  +sysName: string,
+  +sysLocation: string,
+  +prtAlerts: PrinterAlerts
+};
+
+export type PrinterAlerts = Array<{
+  +prtAlertIndex: number,
+  +prtAlertSeverityLevel: string,
+  +prtAlertGroup: number,
+  +prtAlertCode: number,
+  +prtAlertDescription: string,
+  +prtAlertTime: number
+}>;
+
+export type GetState = () => State;
 
 export type Dispatch = ReduxDispatch<Action>;
 

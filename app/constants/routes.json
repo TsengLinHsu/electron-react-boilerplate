@@ -3,5 +3,5 @@
   "ABOUT": "/about",
   "COUNTER": "/counter",
   "NETWORK": "/network",
-  "DETAIL": "/detail/:ip"
+  "DETAIL": "/detail/:address"
 }

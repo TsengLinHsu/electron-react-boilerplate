@@ -16,6 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "bonjour": "^3.5.0",
-    "net-snmp": "^1.2.4"
+    "net-snmp": "^1.2.4",
+    "ping": "^0.2.2"
   }
 }
