@@ -5,7 +5,7 @@ import Bonjour from 'bonjour';
 import low from 'lowdb';
 import LocalStorage from 'lowdb/adapters/LocalStorage';
 import ping from 'ping';
-import type { GetState, Dispatch, Action, ShortInfo } from '../reducers/types';
+import type { GetState, Dispatch, Action, Printer } from '../reducers/types';
 
 export const ADD_NETWORK_PRINTER = 'ADD_NETWORK_PRINTER';
 export const REMOVE_ALL_PRINTER = 'REMOVE_ALL_PRINTER';
@@ -17,20 +17,20 @@ export const WALK_PRINTER_DETAILS = 'WALK_PRINTER_DETAILS';
 export const DETAIL_IS_THE_SAME = 'DETAIL_IS_THE_SAME';
 export const UPDATE_PRINTER_ALIVE = 'UPDATE_PRINTER_ALIVE';
 
-export function checkPrinterAlive() {
-  return (dispatch: Dispatch, getState: GetState) => {
-    const { printers } = getState();
-    printers.forEach(printer => {
-      ping.sys.probe(printer.address, alive => {
-        const aliveData = {
-          address: printer.address,
-          alive
-        };
-        dispatch(updatePrinterAlive(aliveData));
-      });
-    });
-  };
-}
+// export function checkPrinterAlive() {
+//   return (dispatch: Dispatch, getState: GetState) => {
+//     const { printers } = getState();
+//     printers.forEach(printer => {
+//       ping.sys.probe(printer.address, alive => {
+//         const aliveData = {
+//           address: printer.address,
+//           alive
+//         };
+//         dispatch(updatePrinterAlive(aliveData));
+//       });
+//     });
+//   };
+// }
 
 export function checkPrinterAliveWithAddress(address) {
   return (dispatch: Dispatch) => {
@@ -51,8 +51,8 @@ export function updatePrinterAlive(aliveData) {
   };
 }
 
-export function startBonjour() {
-  return (dispatch: Dispatch, getState: GetState) => {
+export function startUpdatePrinters() {
+  return (dispatch: Dispatch) => {
     // dispatch(removeAllPrinter());
     // console.log(printers);
 
@@ -65,74 +65,56 @@ export function startBonjour() {
     // console.log(localPrinters);
 
     localPrinters.printers.forEach(localPrinter => {
-      const { printers } = getState();
-
-      let isExist = false;
-      for (let i = 0; i < printers.length; i += 1) {
-        if (
-          printers[i].name === localPrinter.name ||
-          printers[i].address === localPrinter.address
-        ) {
-          isExist = true;
-          break;
-        }
-      }
-
-      if (isExist) {
-        dispatch({
-          type: PRINTER_IS_EXIST
-        });
-      } else {
-        dispatch(addPrinterAndUpdateAlive(localPrinter));
-      }
+      dispatch(addPrinterAndUpdateAlive(localPrinter));
     });
 
     const bonjour = Bonjour();
     const browser = bonjour.find({ type: 'printer' }, service => {
-      const printer: ShortInfo = {
+      const printer: Printer = {
         name: service.name,
         address: service.referer.address
       };
-      const { printers } = getState();
-
-      // console.log(service, printers);
-      let isExist = false;
-      for (let i = 0; i < printers.length; i += 1) {
-        if (
-          printers[i].name === printer.name ||
-          printers[i].address === printer.address
-        ) {
-          isExist = true;
-          break;
-        }
-      }
-
-      if (isExist) {
-        dispatch({
-          type: PRINTER_IS_EXIST
-        });
-      } else {
-        dispatch(addPrinterAndUpdateAlive(printer));
-      }
+      dispatch(addPrinterAndUpdateAlive(printer));
     });
-    /* Stop searching after 15 seconds */
+    /* Stop searching after 5 seconds */
     setTimeout(() => {
       browser.stop();
-    }, 2 * 1000);
+    }, 5 * 1000);
   };
 }
 
-export function addPrinterAndUpdateAlive(shortInfo: ShortInfo) {
-  return (dispatch: Dispatch) => {
-    dispatch(addNetworkPrinter(shortInfo));
-    dispatch(checkPrinterAliveWithAddress(shortInfo.address));
+export function addPrinterAndUpdateAlive(printer: Printer) {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const { printers } = getState();
+
+    // console.log(service, printers);
+    let isExist = false;
+    for (let i = 0; i < printers.length; i += 1) {
+      if (
+        printers[i].name === printer.name ||
+        printers[i].address === printer.address
+      ) {
+        isExist = true;
+        break;
+      }
+    }
+
+    if (isExist) {
+      dispatch({
+        type: PRINTER_IS_EXIST
+      });
+      dispatch(checkPrinterAliveWithAddress(printer.address));
+    } else {
+      dispatch(addNetworkPrinter(printer));
+      dispatch(checkPrinterAliveWithAddress(printer.address));
+    }
   };
 }
 
-export function addNetworkPrinter(shortInfo: ShortInfo): Action {
+export function addNetworkPrinter(printer: Printer): Action {
   return {
     type: ADD_NETWORK_PRINTER,
-    printerShortInfo: shortInfo
+    printer
   };
 }
 

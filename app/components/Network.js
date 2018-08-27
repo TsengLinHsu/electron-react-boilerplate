@@ -6,21 +6,17 @@ import low from 'lowdb';
 import LocalStorage from 'lowdb/adapters/LocalStorage';
 import './Network.css';
 import cm315z from '../../resources/imgs/cm315z.jpg';
+import type { Printer } from '../reducers/types';
 
 type Props = {
-  startBonjour: () => void,
+  startUpdatePrinters: () => void,
   addPrinterAndUpdateAlive: () => void,
   removeAllPrinter: () => void,
   updatePrinterDetails: () => void,
-  checkPrinterAlive: () => void,
-  printers?: Array<Printer>
+  printers: Array<Printer>
 };
 
 export default class Network extends Component<Props> {
-  static defaultProps = {
-    printers: []
-  };
-
   constructor(props) {
     super(props);
     this.state = { modal: false, printerName: '', printerAddress: '' };
@@ -30,16 +26,20 @@ export default class Network extends Component<Props> {
   }
 
   componentWillMount() {
-    const { startBonjour } = this.props;
-    startBonjour();
+    const { startUpdatePrinters } = this.props;
+    startUpdatePrinters();
   }
 
   componentDidMount() {
-    const { checkPrinterAlive } = this.props;
-    setInterval(() => checkPrinterAlive(), 60000);
+    const { startUpdatePrinters } = this.props;
+    const intervalId = setInterval(() => startUpdatePrinters(), 60000);
+    this.setState({ intervalId });
   }
 
-  componentWillUnmount() {}
+  componentWillUnmount() {
+    const { intervalId } = this.state;
+    clearInterval(intervalId);
+  }
 
   handleInputChange({ target }) {
     const { value, name } = target;
@@ -89,7 +89,7 @@ export default class Network extends Component<Props> {
 
   render() {
     const {
-      startBonjour,
+      startUpdatePrinters,
       removeAllPrinter,
       updatePrinterDetails,
 
@@ -185,7 +185,7 @@ export default class Network extends Component<Props> {
               <p>
                 <button
                   className="btn btn-primary m-1"
-                  onClick={startBonjour}
+                  onClick={startUpdatePrinters}
                   type="button"
                 >
                   Refresh

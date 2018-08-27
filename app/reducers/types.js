@@ -19,21 +19,7 @@ export type Printer = {
 };
 
 export type Action = {
-  type: string,
-  printerShortInfo?: ShortInfo,
-  printerDetailInfo?: DetailInfo
-};
-
-export type ShortInfo = {
-  name: string,
-  address: string,
-  alive?: boolean
-};
-
-export type DetailInfo = {
-  +sysName: string,
-  +sysLocation: string,
-  +prtAlerts: PrinterAlerts
+  type: string
 };
 
 export type PrinterAlerts = Array<{

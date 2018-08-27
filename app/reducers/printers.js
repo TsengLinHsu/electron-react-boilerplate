@@ -7,17 +7,17 @@ import {
   REMOVE_PRINTER_DETAILS,
   UPDATE_PRINTER_ALIVE
 } from '../actions/printer';
-import type { Action, Printers } from './types';
+import type { Action, Printer } from './types';
 
-const initialState: Printers = [];
+const initialState: Array<Printer> = [];
 
 export default function printers(
-  state: Printers = initialState,
+  state: Array<Printer> = initialState,
   action: Action
 ) {
   switch (action.type) {
     case ADD_NETWORK_PRINTER:
-      return state.concat([action.printerShortInfo]);
+      return state.concat([action.printer]);
 
     case REMOVE_ALL_PRINTER:
       return [];
