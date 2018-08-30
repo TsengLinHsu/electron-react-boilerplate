@@ -1,6 +1,6 @@
 /* eslint flowtype-errors/show-errors: 0 */
 import React from 'react';
-import { Switch, Route, Redirect } from 'react-router';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import routes from './constants/routes.json';
 import App from './containers/App';
 import AboutPage from './containers/AboutPage';

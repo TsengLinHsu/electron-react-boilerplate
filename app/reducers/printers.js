@@ -3,6 +3,7 @@
 import {
   ADD_NETWORK_PRINTER,
   REMOVE_ALL_PRINTER,
+  TOGGLE_FAVORITE,
   UPDATE_PRINTER_DETAILS,
   REMOVE_PRINTER_DETAILS,
   UPDATE_PRINTER_ALIVE
@@ -21,6 +22,14 @@ export default function printers(
 
     case REMOVE_ALL_PRINTER:
       return [];
+
+    case TOGGLE_FAVORITE:
+      return state.map(
+        printer =>
+          printer.name === action.name
+            ? { ...printer, favorite: !printer.favorite }
+            : printer
+      );
 
     case UPDATE_PRINTER_DETAILS: {
       return state.map(printer => {

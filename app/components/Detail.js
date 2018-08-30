@@ -1,10 +1,27 @@
 // @flow
 import React, { Component } from 'react';
-import './Detail.css';
-import cm315z from '../../resources/imgs/cm315z.jpg';
+import { withStyles } from '@material-ui/core/styles';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import type { Printer } from '../reducers/types';
 
+const styles = theme => ({
+  root: {
+    flexGrow: 1
+  },
+  demo: {
+    backgroundColor: theme.palette.background.paper
+  },
+  title: {
+    margin: `${theme.spacing.unit * 4}px 0 ${theme.spacing.unit * 2}px`
+  }
+});
+
 type Props = {
+  classes: {},
   updatePrinterDetails: () => void,
   removePrinterDetails: () => void,
   walkPrinterDetails: () => void,
@@ -16,201 +33,263 @@ type Props = {
   }
 };
 
-export default class Detail extends Component<Props> {
+class Detail extends Component<Props> {
   static defaultProps = {
     printers: []
   };
 
+  componentDidMount() {
+    const { updatePrinterDetails, match } = this.props;
+    const intervalId = setInterval(
+      () => updatePrinterDetails(match.params.address),
+      60000
+    );
+    this.setState({ intervalId });
+  }
+
+  componentWillUnmount() {
+    const { intervalId } = this.state;
+    clearInterval(intervalId);
+  }
+
   render() {
-    const {
-      updatePrinterDetails,
-      // removePrinterDetails,
-      // walkPrinterDetails,
-      printers,
-      match
-    } = this.props;
+    const { printers, match, classes } = this.props;
+
+    const selectedPrinter = printers.find(
+      printer => printer.address === match.params.address
+    );
 
     const AlertItem = ({ prtAlertSeverityLevel, prtAlertDescription }) => (
-      <li className="list-group-item d-flex justify-content-between lh-condensed">
-        <div>
-          <h6 className="my-0">{prtAlertSeverityLevel}</h6>
-          <small className="text-muted">{prtAlertDescription}</small>
-        </div>
-      </li>
+      <ListItem>
+        <ListItemText
+          primary={prtAlertDescription}
+          secondary={prtAlertSeverityLevel}
+        />
+      </ListItem>
     );
 
-    const AlertList = ({ alerts }) => (
-      <div>
-        <h4 className="d-flex justify-content-between align-items-center mb-3">
-          <span className="text-muted">Status</span>
-          <span className="badge badge-secondary badge-pill">
-            {alerts.length}
-          </span>
-        </h4>
-
-        <ul className="list-group mb-3">
-          {alerts.map(alert => (
-            <AlertItem key={alert.prtAlertIndex} {...alert} />
-          ))}
-        </ul>
-      </div>
-    );
-
-    const MainDetails = () => {
-      if (printers.length <= 0) {
-        return <div />;
-      }
-
-      const result = printers.find(
-        printer => printer.address === match.params.address
-      );
-      if (!result.details) {
-        return <div />;
-      }
-
-      const { details } = result;
-      if (!details) {
-        return <div />;
+    const AlertList = ({ alerts }) => {
+      if (!alerts) {
+        return null;
       }
 
       return (
-        <div className="row">
-          <div className="col-md-4 order-md-2 mb-4">
-            {details.prtAlertEntry ? (
-              <AlertList alerts={details.prtAlertEntry} />
-            ) : null}
-            <div className="btn-group" role="group">
-              <button
-                className="btn btn-secondary"
-                onClick={() => updatePrinterDetails(match.params.address)}
-                type="button"
-              >
-                Refresh
-              </button>
-              {/* <button
-                  className="btn btn-secondary"
-                  onClick={() => removePrinterDetails(match.params.address)}
-                  type="button"
-                >
-                  Clear
-                </button>
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => walkPrinterDetails(match.params.address)}
-                  type="button"
-                >
-                  Walk
-                </button> */}
+        <React.Fragment>
+          <Typography variant="title" className={classes.title}>
+            Status
+          </Typography>
+          <div className={classes.demo}>
+            <List>
+              {alerts.map(alert => (
+                <AlertItem key={alert.prtAlertIndex} {...alert} />
+              ))}
+            </List>
+          </div>
+        </React.Fragment>
+      );
+    };
+
+    const DetailsList = ({ details }) => {
+      if (!details) {
+        return null;
+      }
+
+      return (
+        <React.Fragment>
+          <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
+            <Typography variant="title" className={classes.title}>
+              General
+            </Typography>
+            <div className={classes.demo}>
+              <List>
+                <ListItem>
+                  <ListItemText
+                    primary="Product Name:"
+                    secondary={details.productName}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary="Name:" secondary={details.name} />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Serial Number:"
+                    secondary={details.serialNumber}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Address:"
+                    secondary={details.address}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Location:"
+                    secondary={details.location ? details.location : 'N/A'}
+                  />
+                </ListItem>
+              </List>
             </div>
-          </div>
-          <div className="col-md-8 order-md-1">
-            <h4 className="mb-3">Details</h4>
-            <dl>
-              <dt>Product Name:</dt>
-              <dd>{details.productName}</dd>
-              <dt>Name:</dt>
-              <dd>{details.name}</dd>
-              <dt>Serial Number:</dt>
-              <dd>{details.serialNumber}</dd>
-              <dt>IP:</dt>
-              <dd>{details.address}</dd>
-              <dt>Location:</dt>
-              <dd>{details.location ? details.location : 'N/A'}</dd>
-              <dt>Cyan Toner Cartridge:</dt>
-              <dd>
-                {(details.cTonerCartridgeRemainCap /
-                  details.cTonerCartridgeFullCap) *
-                  100}
-                %
-              </dd>
-              <dt>Magenta Toner Cartridge:</dt>
-              <dd>
-                {(details.mTonerCartridgeRemainCap /
-                  details.mTonerCartridgeFullCap) *
-                  100}
-                %
-              </dd>
-              <dt>Yellow Toner Cartridge:</dt>
-              <dd>
-                {(details.yTonerCartridgeRemainCap /
-                  details.yTonerCartridgeFullCap) *
-                  100}
-                %
-              </dd>
-              <dt>Black Toner Cartridge:</dt>
-              <dd>
-                {(details.bTonerCartridgeRemainCap /
-                  details.bTonerCartridgeFullCap) *
-                  100}
-                %
-              </dd>
-              <dt>Cyan Drum Cartridge:</dt>
-              <dd>
-                {(details.cDrumCartridgeRemainCap /
-                  details.cDrumCartridgeFullCap) *
-                  100}
-                %
-              </dd>
-              <dt>Magenta Drum Cartridge:</dt>
-              <dd>
-                {(details.mDrumCartridgeRemainCap /
-                  details.mDrumCartridgeFullCap) *
-                  100}
-                %
-              </dd>
-              <dt>Yellow Drum Cartridge:</dt>
-              <dd>
-                {(details.yDrumCartridgeRemainCap /
-                  details.yDrumCartridgeFullCap) *
-                  100}
-                %
-              </dd>
-              <dt>Black Drum Cartridge:</dt>
-              <dd>
-                {(details.bDrumCartridgeRemainCap /
-                  details.bDrumCartridgeFullCap) *
-                  100}
-                %
-              </dd>
-              <dt>Waste Toner Box:</dt>
-              <dd>
-                {(details.wasteTonerBoxRemainCap /
-                  details.wasteTonerBoxFullCap) *
-                  100}
-                %
-              </dd>
-              <dt>Right Side Cover:</dt>
-              <dd>{details.rightSideCover}</dd>
-              <dt>Rear Cover:</dt>
-              <dd>{details.rearCover}</dd>
-              <dt>DADF Cover:</dt>
-              <dd>{details.dadfCover}</dd>
-            </dl>
-          </div>
-        </div>
+          </Grid>
+          <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
+            <Typography variant="title" className={classes.title}>
+              Toner Cartridge
+            </Typography>
+            <div className={classes.demo}>
+              <List>
+                <ListItem>
+                  <ListItemText
+                    primary="Cyan Toner Cartridge:"
+                    secondary={
+                      (details.cTonerCartridgeRemainCap /
+                        details.cTonerCartridgeFullCap) *
+                      100
+                    }
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Magenta Toner Cartridge:"
+                    secondary={
+                      (details.mTonerCartridgeRemainCap /
+                        details.mTonerCartridgeFullCap) *
+                      100
+                    }
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Yellow Toner Cartridge:"
+                    secondary={
+                      (details.yTonerCartridgeRemainCap /
+                        details.yTonerCartridgeFullCap) *
+                      100
+                    }
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Black Toner Cartridge:"
+                    secondary={
+                      (details.bTonerCartridgeRemainCap /
+                        details.bTonerCartridgeFullCap) *
+                      100
+                    }
+                  />
+                </ListItem>
+              </List>
+            </div>
+          </Grid>
+          <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
+            <Typography variant="title" className={classes.title}>
+              Drum Cartridge
+            </Typography>
+            <div className={classes.demo}>
+              <List>
+                <ListItem>
+                  <ListItemText
+                    primary="Cyan Drum Cartridge:"
+                    secondary={
+                      (details.cDrumCartridgeRemainCap /
+                        details.cDrumCartridgeFullCap) *
+                      100
+                    }
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Magenta Drum Cartridge:"
+                    secondary={
+                      (details.mDrumCartridgeRemainCap /
+                        details.mDrumCartridgeFullCap) *
+                      100
+                    }
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Yellow Drum Cartridge:"
+                    secondary={
+                      (details.yDrumCartridgeRemainCap /
+                        details.yDrumCartridgeFullCap) *
+                      100
+                    }
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Black Drum Cartridge:"
+                    secondary={
+                      (details.bDrumCartridgeRemainCap /
+                        details.bDrumCartridgeFullCap) *
+                      100
+                    }
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Waste Toner Box:"
+                    secondary={
+                      (details.wasteTonerBoxRemainCap /
+                        details.wasteTonerBoxFullCap) *
+                      100
+                    }
+                  />
+                </ListItem>
+              </List>
+            </div>
+          </Grid>
+          <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
+            <Typography variant="title" className={classes.title}>
+              Covers Status
+            </Typography>
+            <div className={classes.demo}>
+              <List>
+                <ListItem>
+                  <ListItemText
+                    primary="Right Side Cover:"
+                    secondary={details.rightSideCover}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Rear Cover:"
+                    secondary={details.rearCover}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="DADF Cover:"
+                    secondary={details.dadfCover}
+                  />
+                </ListItem>
+              </List>
+            </div>
+          </Grid>
+          <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
+            <AlertList alerts={details.prtAlertEntry} />
+          </Grid>
+        </React.Fragment>
       );
     };
 
     return (
-      <div>
-        <div className="container">
-          <div className="py-5 text-center">
-            <img className="col-md-6" src={cm315z} alt="" />
-            {/* <h2>Checkout form</h2>
-            <p className="lead">
-              Below is an example form built entirely with Bootstrap's form
-              controls. Each required form group has a validation state that can
-              be triggered by attempting to submit the form without completing
-              it.
-            </p> */}
-          </div>
-
-          <MainDetails />
-          <footer className="my-5 pt-5 text-muted text-center text-small">
-            <p className="mb-1">© 2017-2018 Company Name</p>
-          </footer>
-        </div>
+      <div className={classes.root}>
+        <Grid
+          container
+          spacing={16}
+          direction="row"
+          justify="flex-start"
+          alignItems="flex-start"
+        >
+          {selectedPrinter ? (
+            <DetailsList details={selectedPrinter.details} />
+          ) : null}
+        </Grid>
       </div>
     );
   }
 }
+
+export default withStyles(styles)(Detail);

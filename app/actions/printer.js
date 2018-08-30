@@ -9,7 +9,7 @@ import type { GetState, Dispatch, Action, Printer } from '../reducers/types';
 
 export const ADD_NETWORK_PRINTER = 'ADD_NETWORK_PRINTER';
 export const REMOVE_ALL_PRINTER = 'REMOVE_ALL_PRINTER';
-export const TOGGLE_PRINTER_DETAILS = 'TOGGLE_PRINTER_DETAILS';
+export const TOGGLE_FAVORITE = 'TOGGLE_FAVORITE';
 export const PRINTER_IS_EXIST = 'PRINTER_IS_EXIST';
 export const UPDATE_PRINTER_DETAILS = 'UPDATE_PRINTER_DETAILS';
 export const REMOVE_PRINTER_DETAILS = 'REMOVE_PRINTER_DETAILS';
@@ -51,6 +51,11 @@ export function updatePrinterAlive(aliveData) {
   };
 }
 
+export const toggleFavorite = name => ({
+  type: TOGGLE_FAVORITE,
+  name
+});
+
 export function startUpdatePrinters() {
   return (dispatch: Dispatch) => {
     // dispatch(removeAllPrinter());
@@ -72,7 +77,8 @@ export function startUpdatePrinters() {
     const browser = bonjour.find({ type: 'printer' }, service => {
       const printer: Printer = {
         name: service.name,
-        address: service.referer.address
+        address: service.referer.address,
+        favorite: false
       };
       dispatch(addPrinterAndUpdateAlive(printer));
     });
@@ -89,14 +95,12 @@ export function addPrinterAndUpdateAlive(printer: Printer) {
 
     // console.log(service, printers);
     let isExist = false;
-    for (let i = 0; i < printers.length; i += 1) {
-      if (
-        printers[i].name === printer.name ||
-        printers[i].address === printer.address
-      ) {
-        isExist = true;
-        break;
-      }
+
+    if (
+      printers.some(e => e.name === printer.name) ||
+      printers.some(e => e.address === printer.address)
+    ) {
+      isExist = true;
     }
 
     if (isExist) {

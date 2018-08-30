@@ -10,6 +10,7 @@ type State = {
 export type Printer = {
   +name: string,
   +address: string,
+  +favorite: boolean,
   +alive?: boolean,
   +details?: {
     +sysName?: string,
