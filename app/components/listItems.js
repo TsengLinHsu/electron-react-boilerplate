@@ -4,27 +4,31 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
+import Tooltip from '@material-ui/core/Tooltip';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import SettingsIcon from '@material-ui/icons/Settings';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-import Grow from '@material-ui/core/Grow';
 import { Link } from 'react-router-dom';
 import routes from '../constants/routes.json';
 
 export const MainListItems = () => (
   <div>
-    <ListItem button component={Link} to={routes.NETWORK}>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Dashboard" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <SettingsIcon />
-      </ListItemIcon>
-      <ListItemText primary="Settings" />
-    </ListItem>
+    <Tooltip title="Dashboard" placement="right">
+      <ListItem button component={Link} to={routes.NETWORK}>
+        <ListItemIcon>
+          <DashboardIcon />
+        </ListItemIcon>
+        <ListItemText primary="Dashboard" />
+      </ListItem>
+    </Tooltip>
+    <Tooltip title="Settings" placement="right">
+      <ListItem button component={Link} to={routes.SETTING}>
+        <ListItemIcon>
+          <SettingsIcon />
+        </ListItemIcon>
+        <ListItemText primary="Settings" />
+      </ListItem>
+    </Tooltip>
   </div>
 );
 
@@ -44,9 +48,10 @@ const FavoriteList = props => {
   return printers.map(printer => {
     if (printer.favorite) {
       return (
-        <Grow in={printer.favorite} key={printer.address}>
+        <Tooltip title={printer.name} placement="right" key={printer.address}>
           <ListItem
             button
+            disabled={!printer.alive}
             component={Link}
             to={`/detail/${printer.address}`}
             onClick={() => updatePrinterDetails(printer.address)}
@@ -56,7 +61,7 @@ const FavoriteList = props => {
             </ListItemIcon>
             <ListItemText primary={printer.address} />
           </ListItem>
-        </Grow>
+        </Tooltip>
       );
     }
     return null;

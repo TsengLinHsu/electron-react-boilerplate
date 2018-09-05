@@ -7,6 +7,7 @@ import AboutPage from './containers/AboutPage';
 import NetworkPage from './containers/NetworkPage';
 import CounterPage from './containers/CounterPage';
 import DetailPage from './containers/DetailPage';
+import SettingPage from './containers/SettingPage';
 import ScrollToTop from './scrollToTop';
 
 export default () => (
@@ -16,6 +17,7 @@ export default () => (
         <Route path={routes.NETWORK} component={NetworkPage} />
         <Route path={routes.COUNTER} component={CounterPage} />
         <Route path={routes.DETAIL} component={DetailPage} />
+        <Route path={routes.SETTING} component={SettingPage} />
         <Route path={routes.ABOUT} component={AboutPage} />
         <Route exact path="/" render={() => <Redirect to={routes.NETWORK} />} />
       </Switch>

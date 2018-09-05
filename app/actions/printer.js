@@ -16,6 +16,13 @@ export const REMOVE_PRINTER_DETAILS = 'REMOVE_PRINTER_DETAILS';
 export const WALK_PRINTER_DETAILS = 'WALK_PRINTER_DETAILS';
 export const DETAIL_IS_THE_SAME = 'DETAIL_IS_THE_SAME';
 export const UPDATE_PRINTER_ALIVE = 'UPDATE_PRINTER_ALIVE';
+export const SET_VISIBILITY_FILTER = 'SET_VISIBILITY_FILTER';
+
+export const VisibilityFilters = {
+  SHOW_ALL: 'SHOW_ALL',
+  SHOW_ONLINE: 'SHOW_ONLINE',
+  SHOW_FAVORITE: 'SHOW_FAVORITE'
+};
 
 // export function checkPrinterAlive() {
 //   return (dispatch: Dispatch, getState: GetState) => {
@@ -46,10 +53,15 @@ export function checkPrinterAliveWithAddress(address) {
 
 export function updatePrinterAlive(aliveData) {
   return {
-    aliveData,
-    type: UPDATE_PRINTER_ALIVE
+    type: UPDATE_PRINTER_ALIVE,
+    aliveData
   };
 }
+
+export const setVisibilityFilter = filter => ({
+  type: SET_VISIBILITY_FILTER,
+  filter
+});
 
 export const toggleFavorite = name => ({
   type: TOGGLE_FAVORITE,
@@ -133,8 +145,8 @@ export function removeAllPrinter(): Action {
 
 export function removePrinterDetails(address: string) {
   return {
-    address,
-    type: REMOVE_PRINTER_DETAILS
+    type: REMOVE_PRINTER_DETAILS,
+    address
   };
 }
 
@@ -529,7 +541,7 @@ export function updatePrinterDetails(address: string) {
 
 export function addPrinterDetails(details) {
   return {
-    details,
-    type: UPDATE_PRINTER_DETAILS
+    type: UPDATE_PRINTER_DETAILS,
+    details
   };
 }

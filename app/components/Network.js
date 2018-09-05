@@ -30,11 +30,11 @@ export default class Network extends React.Component<Props> {
   }
 
   render() {
-    const { printers } = this.props;
+    const { printers, ...other } = this.props;
 
     return (
       <div>
-        <Album printers={printers} {...this.props} />
+        <Album printers={printers} {...other} />
       </div>
     );
   }

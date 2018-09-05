@@ -18,7 +18,7 @@ export default function printers(
 ) {
   switch (action.type) {
     case ADD_NETWORK_PRINTER:
-      return state.concat([action.printer]);
+      return [...state, action.printer];
 
     case REMOVE_ALL_PRINTER:
       return [];
