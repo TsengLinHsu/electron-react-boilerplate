@@ -14,6 +14,20 @@ import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import ListItemText from '@material-ui/core/ListItemText';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Grow from '@material-ui/core/Grow';
+import Paper from '@material-ui/core/Paper';
+import Popper from '@material-ui/core/Popper';
+import Avatar from '@material-ui/core/Avatar';
+import ListItem from '@material-ui/core/ListItem';
+import ListSubheader from '@material-ui/core/ListSubheader';
+import ErrorIcon from '@material-ui/icons/Error';
+import WarningIcon from '@material-ui/icons/Warning';
+import InfoIcon from '@material-ui/icons/Info';
+import red from '@material-ui/core/colors/red';
+import green from '@material-ui/core/colors/green';
+import yellow from '@material-ui/core/colors/yellow';
 import { MainListItems, SecondaryListItems } from './listItems';
 import type { Printer } from '../reducers/types';
 
@@ -90,6 +104,15 @@ const styles = theme => ({
   },
   tableContainer: {
     height: 320
+  },
+  info: {
+    backgroundColor: green[500]
+  },
+  warning: {
+    backgroundColor: yellow[500]
+  },
+  error: {
+    backgroundColor: red[500]
   }
 });
 
@@ -103,7 +126,8 @@ class Dashboard extends React.Component<Props> {
   props: Props;
 
   state = {
-    open: false
+    open: false,
+    notificationOpen: false
   };
 
   handleDrawerOpen = () => {
@@ -114,9 +138,74 @@ class Dashboard extends React.Component<Props> {
     this.setState({ open: false });
   };
 
+  handleToggle = () => {
+    this.setState(state => ({ notificationOpen: !state.notificationOpen }));
+  };
+
+  handleClose = event => {
+    if (this.anchorEl.contains(event.target)) {
+      return;
+    }
+
+    this.setState({ notificationOpen: false });
+  };
+
   render() {
-    const { classes, children } = this.props;
-    const { open } = this.state;
+    const { classes, children, printers } = this.props;
+    const { open, notificationOpen } = this.state;
+
+    const printersDetails = printers
+      .filter(printer => printer.details != null)
+      .map(printer => printer.details);
+
+    const AlertIcon = ({ level }) => {
+      switch (level) {
+        case 'Other':
+          return (
+            <Avatar className={classes.info}>
+              <InfoIcon />
+            </Avatar>
+          );
+        case 'Critical':
+          return (
+            <Avatar className={classes.error}>
+              <ErrorIcon />
+            </Avatar>
+          );
+        case 'Warning':
+          return (
+            <Avatar className={classes.warning}>
+              <WarningIcon />
+            </Avatar>
+          );
+        default:
+          return (
+            <Avatar className={classes.info}>
+              <InfoIcon />
+            </Avatar>
+          );
+      }
+    };
+
+    const AlertItem = ({ alerts }) =>
+      alerts.map(alert => (
+        <ListItem key={alert.prtAlertIndex}>
+          <AlertIcon level={alert.prtAlertSeverityLevel} />
+          <ListItemText
+            primary={alert.prtAlertDescription}
+            secondary={alert.prtAlertSeverityLevel}
+          />
+        </ListItem>
+      ));
+
+    const PrintersAlerts = ({ address, prtAlertEntry }) => (
+      <React.Fragment>
+        <ListSubheader>{`Address: ${address}`}</ListSubheader>
+
+        <AlertItem alerts={prtAlertEntry} />
+      </React.Fragment>
+    );
+
     return (
       <React.Fragment>
         <CssBaseline />
@@ -145,12 +234,49 @@ class Dashboard extends React.Component<Props> {
               >
                 Dashboard
               </Typography>
-
-              <IconButton color="inherit">
-                <Badge badgeContent={4} color="secondary">
+              <IconButton
+                color="inherit"
+                buttonRef={node => {
+                  this.anchorEl = node;
+                }}
+                aria-owns={notificationOpen ? 'menu-list-grow' : null}
+                aria-haspopup="true"
+                onClick={this.handleToggle}
+              >
+                <Badge badgeContent={printersDetails.length} color="secondary">
                   <NotificationsIcon />
                 </Badge>
               </IconButton>
+              <Popper
+                open={notificationOpen}
+                anchorEl={this.anchorEl}
+                transition
+                disablePortal
+              >
+                {({ TransitionProps, placement }) => (
+                  <Grow
+                    {...TransitionProps}
+                    id="menu-list-grow"
+                    style={{
+                      transformOrigin:
+                        placement === 'bottom' ? 'center top' : 'center bottom'
+                    }}
+                  >
+                    <Paper>
+                      <ClickAwayListener onClickAway={this.handleClose}>
+                        <List>
+                          {printersDetails.map(details => (
+                            <PrintersAlerts
+                              key={details.address}
+                              {...details}
+                            />
+                          ))}
+                        </List>
+                      </ClickAwayListener>
+                    </Paper>
+                  </Grow>
+                )}
+              </Popper>
             </Toolbar>
           </AppBar>
           <Drawer
