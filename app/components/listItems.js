@@ -14,7 +14,7 @@ import routes from '../constants/routes.json';
 export const MainListItems = () => (
   <div>
     <Tooltip title="Dashboard" placement="right">
-      <ListItem button component={Link} to={routes.NETWORK}>
+      <ListItem button component={Link} to={routes.NETWORK} draggable="false">
         <ListItemIcon>
           <DashboardIcon />
         </ListItemIcon>
@@ -22,7 +22,7 @@ export const MainListItems = () => (
       </ListItem>
     </Tooltip>
     <Tooltip title="Settings" placement="right">
-      <ListItem button component={Link} to={routes.SETTING}>
+      <ListItem button component={Link} to={routes.SETTING} draggable="false">
         <ListItemIcon>
           <SettingsIcon />
         </ListItemIcon>
@@ -55,6 +55,7 @@ const FavoriteList = props => {
             component={Link}
             to={`/detail/${printer.address}`}
             onClick={() => updatePrinterDetails(printer.address)}
+            draggable="false"
           >
             <ListItemIcon>
               <AssignmentIcon />

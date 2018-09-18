@@ -88,6 +88,7 @@ const PrinterItem = ({
         component={Link}
         to={`/detail/${printer.address}`}
         onClick={() => updatePrinterDetails(printer.address)}
+        draggable="false"
       >
         <CardMedia className={classes.media} image={cm315z} />
         <CardContent>
