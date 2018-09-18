@@ -141,41 +141,33 @@ class Detail extends Component<Props> {
                 <ListItem>
                   <ListItemText
                     primary="Cyan Toner Cartridge:"
-                    secondary={
-                      (details.cTonerCartridgeRemainCap /
-                        details.cTonerCartridgeFullCap) *
-                      100
-                    }
+                    secondary={`${(details.cTonerCartridgeRemainCap /
+                      details.cTonerCartridgeFullCap) *
+                      100}%`}
                   />
                 </ListItem>
                 <ListItem>
                   <ListItemText
                     primary="Magenta Toner Cartridge:"
-                    secondary={
-                      (details.mTonerCartridgeRemainCap /
-                        details.mTonerCartridgeFullCap) *
-                      100
-                    }
+                    secondary={`${(details.mTonerCartridgeRemainCap /
+                      details.mTonerCartridgeFullCap) *
+                      100}%`}
                   />
                 </ListItem>
                 <ListItem>
                   <ListItemText
                     primary="Yellow Toner Cartridge:"
-                    secondary={
-                      (details.yTonerCartridgeRemainCap /
-                        details.yTonerCartridgeFullCap) *
-                      100
-                    }
+                    secondary={`${(details.yTonerCartridgeRemainCap /
+                      details.yTonerCartridgeFullCap) *
+                      100}%`}
                   />
                 </ListItem>
                 <ListItem>
                   <ListItemText
                     primary="Black Toner Cartridge:"
-                    secondary={
-                      (details.bTonerCartridgeRemainCap /
-                        details.bTonerCartridgeFullCap) *
-                      100
-                    }
+                    secondary={`${(details.bTonerCartridgeRemainCap /
+                      details.bTonerCartridgeFullCap) *
+                      100}%`}
                   />
                 </ListItem>
               </List>
@@ -190,51 +182,41 @@ class Detail extends Component<Props> {
                 <ListItem>
                   <ListItemText
                     primary="Cyan Drum Cartridge:"
-                    secondary={
-                      (details.cDrumCartridgeRemainCap /
-                        details.cDrumCartridgeFullCap) *
-                      100
-                    }
+                    secondary={`${(details.cDrumCartridgeRemainCap /
+                      details.cDrumCartridgeFullCap) *
+                      100}%`}
                   />
                 </ListItem>
                 <ListItem>
                   <ListItemText
                     primary="Magenta Drum Cartridge:"
-                    secondary={
-                      (details.mDrumCartridgeRemainCap /
-                        details.mDrumCartridgeFullCap) *
-                      100
-                    }
+                    secondary={`${(details.mDrumCartridgeRemainCap /
+                      details.mDrumCartridgeFullCap) *
+                      100}%`}
                   />
                 </ListItem>
                 <ListItem>
                   <ListItemText
                     primary="Yellow Drum Cartridge:"
-                    secondary={
-                      (details.yDrumCartridgeRemainCap /
-                        details.yDrumCartridgeFullCap) *
-                      100
-                    }
+                    secondary={`${(details.yDrumCartridgeRemainCap /
+                      details.yDrumCartridgeFullCap) *
+                      100}%`}
                   />
                 </ListItem>
                 <ListItem>
                   <ListItemText
                     primary="Black Drum Cartridge:"
-                    secondary={
-                      (details.bDrumCartridgeRemainCap /
-                        details.bDrumCartridgeFullCap) *
-                      100
-                    }
+                    secondary={`${(details.bDrumCartridgeRemainCap /
+                      details.bDrumCartridgeFullCap) *
+                      100}%`}
                   />
                 </ListItem>
                 <ListItem>
                   <ListItemText
                     primary="Waste Toner Box:"
-                    secondary={
-                      (details.wasteTonerBoxRemainCap /
-                        details.wasteTonerBoxFullCap) *
-                      100
-                    }
+                    secondary={`${(details.wasteTonerBoxRemainCap /
+                      details.wasteTonerBoxFullCap) *
+                      100}%`}
                   />
                 </ListItem>
               </List>
