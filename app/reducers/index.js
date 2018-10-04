@@ -1,15 +1,19 @@
 // @flow
 import { combineReducers } from 'redux';
-import { routerReducer as router } from 'react-router-redux';
+import { connectRouter } from 'connected-react-router';
 import counter from './counter';
 import printers from './printers';
 import visibilityFilter from './visibilityFilter';
 
-const rootReducer = combineReducers({
-  printers,
-  visibilityFilter,
-  counter,
-  router
-});
+export default function createRootReducer(history: {}) {
+  const routerReducer = connectRouter(history)(() => {});
 
-export default rootReducer;
+  return connectRouter(history)(
+    combineReducers({
+      router: routerReducer,
+      printers,
+      visibilityFilter,
+      counter
+    })
+  );
+}

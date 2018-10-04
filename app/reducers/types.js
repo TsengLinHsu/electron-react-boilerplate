@@ -1,6 +1,6 @@
 import type { Dispatch as ReduxDispatch, Store as ReduxStore } from 'redux';
 
-type State = {
+export type State = {
   +counter: number,
   +printers: Array<Printer>,
   +activeDetail?: string

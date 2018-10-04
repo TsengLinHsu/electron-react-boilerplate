@@ -1,7 +1,8 @@
 /* eslint flowtype-errors/show-errors: 0 */
 import React from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
-import routes from './constants/routes.json';
+
+import { Redirect, Switch, Route } from 'react-router-dom';
+import routes from './constants/routes';
 import App from './containers/App';
 import AboutPage from './containers/AboutPage';
 import NetworkPage from './containers/NetworkPage';

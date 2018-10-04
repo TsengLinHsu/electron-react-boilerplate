@@ -40,6 +40,7 @@ A boilerplate for Scalable Cross-Platform Desktop Apps based on  <a href="http:/
 [![Build Status][travis-image]][travis-url]
 [![Appveyor Build Status][appveyor-image]][appveyor-url]
 [![Dependency Status][david_img]][david_site]
+[![DevDependency Status][david_img_dev]][david_site_dev]
 [![Github Tag][github-tag-image]][github-tag-url]
 [![Join the chat at https://gitter.im/electron-react-boilerplate/Lobby](https://badges.gitter.im/electron-react-boilerplate/Lobby.svg)](https://gitter.im/electron-react-boilerplate/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![OpenCollective](https://opencollective.com/electron-react-boilerplate/backers/badge.svg)](#backers)
@@ -85,10 +86,10 @@ $ yarn start-renderer-dev
 $ yarn start-main-dev
 ```
 
-If you don't need autofocus when your files was changed, then run `dev` with env `WITHOUT_FOCUS=true`:
+If you don't need autofocus when your files was changed, then run `dev` with env `START_MINIMIZED=true`:
 
 ```bash
-$ WITHOUT_FOCUS=true yarn dev
+$ START_MINIMIZED=true yarn dev
 ```
 
 ## Packaging
@@ -118,7 +119,11 @@ $ yarn package -- --[option]
 To run End-to-End Test
 
 ```bash
-$ yarn build
+$ yarn build-e2e
+$ yarn test-e2e
+
+# Running e2e tests in a minimized window
+$ START_MINIMIZED=true yarn build-e2e
 $ yarn test-e2e
 ```
 
@@ -290,3 +295,5 @@ MIT © [C. T. Lin](https://github.com/chentsulin)
 [appveyor-url]: https://ci.appveyor.com/project/chentsulin/electron-react-boilerplate/branch/master
 [david_img]: https://img.shields.io/david/chentsulin/electron-react-boilerplate.svg
 [david_site]: https://david-dm.org/chentsulin/electron-react-boilerplate
+[david_img_dev]: https://david-dm.org/chentsulin/electron-react-boilerplate/dev-status.svg
+[david_site_dev]: https://david-dm.org/chentsulin/electron-react-boilerplate?type=dev
