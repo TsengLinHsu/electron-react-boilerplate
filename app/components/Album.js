@@ -14,6 +14,7 @@ import AddIcon from '@material-ui/icons/Add';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
+import Fab from '@material-ui/core/Fab';
 import type { Printer } from '../reducers/types';
 import VisiblePrinterList from '../containers/VisiblePrinterList';
 
@@ -255,15 +256,14 @@ class Album extends React.Component<Props> {
           <div className={classes.cardGrid}>
             <Grid container spacing={40}>
               <VisiblePrinterList handleFavorite={this.handleFavorite}>
-                <Button
-                  variant="fab"
+                <Fab
                   color="primary"
                   aria-label="Add"
                   className={classes.addButton}
                   onClick={this.handleClickOpen}
                 >
                   <AddIcon />
-                </Button>
+                </Fab>
               </VisiblePrinterList>
             </Grid>
           </div>

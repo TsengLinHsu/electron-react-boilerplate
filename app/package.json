@@ -1,7 +1,7 @@
 {
   "name": "status-monitor",
   "productName": "status-monitor",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "monitor printer status",
   "main": "./main.prod.js",
   "author": {
